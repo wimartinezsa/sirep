@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+    </div>
+    <div class="main-contenedor">
+        <section class="body-info-section">
+            <div class="contnet-section-info" style="min-height: 50vh;">
+                <div class="full-container">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h1 class="h-title">Entrega de productos facturados</h1>
+                        </div>
+                        <div class="col-md-5" style="display: flex; align-items: center; justify-content: flex-end;">
+                            <h1 style="font-size: 1.2rem; color: rgb(206, 15, 15)">Pendiente por entregar: 
+                            <span style="font-weight: bold;" id="cantidad-pendiente"></span></h1>       
+                        </div>
+                    </div>
+                    
+                    <hr class="separador-text">
+                    <form id="from-search" onsubmit="return buscarUsuario()">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <select id="estado" class="form-select" onchange="listarPorEstado()">
+                                            <option value="" disabled selected>Selecciona una opción</option>
+                                            <option value="por entregar">Por entregar</option>
+                                            <option value="no reclamado">Historial no reclamados</option>
+                                            <option value="reclamado">Historial entregados</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="md-form mt-0">
+                                    <input class="form-control" type="text" placeholder="Buscar entregas pendientes" aria-label="Search" id="identificacion">
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <button class="btn btn-primary" type="submit">
+                                    Buscar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="mt-3">
+                        <table class="table" id="productos">
+                            <thead>
+                                <th>ID</th>
+                                <th>Identificación</th>
+                                <th>Nombre</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Fecha</th>
+                                <th>Admin</th>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ===MODAL CONFORMAR======== -->
+        <div class="modal fade" id="ModalConfirmar" tabindex="-1" aria-labelledby="ModalArchivo" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" style="max-width: 600px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirmar entrega de producto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 mt-1">
+                            <input type="hidden" id="id-detalle">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <img id="img-profile" src="/img/perfil/default.png"
+                                    style="display: block; width: 100%; max-width: 140px; margin: 0 auto;">
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="row" id="div-ficha">
+                                        <div class="col-sm-4"><b class="mini-titulo">Cargo</b></div>
+                                        <div class="col-sm-8"><span id="span-cargo"></span></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4"><b class="mini-titulo">Identificación</b></div>
+                                        <div class="col-sm-8"><span id="span-identificacion"></span></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4"><b class="mini-titulo">Nombres</b></div>
+                                        <div class="col-sm-8" style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;"><span id="span-nombres"></span></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4"><b class="mini-titulo">Producto</b></div>
+                                        <div class="col-sm-8"><span id="span-producto"></span></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4"><b class="mini-titulo">Cantidad</b></div>
+                                        <div class="col-sm-8"><span id="span-cantidad"></span></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4"><b class="mini-titulo">Valor</b></div>
+                                        <div class="col-sm-8"><span id="span-valor"></span></div>
+                                    </div>
+                                    <div class="row" id="div-ficha">
+                                        <div class="col-sm-4"><b class="mini-titulo">Ficha</b></div>
+                                        <div class="col-sm-8"><span id="span-ficha"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-md-6"><button type="button" id="entregar_btn" class="btn btn-primary" 
+                            onclick="entregarProducto()">Entregar</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('../partials/footer') %>
+    <%- include('../partials/scripts.ejs') %> 
+    <script>
+        var ModalConfirmar = new bootstrap.Modal(document.getElementById('ModalConfirmar'), {keyboard: false});
+        identificacion.focus();
+        var noEntregados = [];
+        function reclamarFRM(id_detalle, identificacion, Nombres, producto, cantidad, valor, ficha, foto, cargo){
+            document.getElementById('id-detalle').value = id_detalle;
+            document.getElementById('span-identificacion').innerHTML = identificacion;
+            document.getElementById('span-nombres').innerHTML = Nombres;
+            document.getElementById('span-cantidad').innerHTML = cantidad;
+            document.getElementById('span-producto').innerHTML = producto;
+            document.getElementById('span-valor').innerHTML = '$ '+valor;
+            document.getElementById('span-cargo').innerHTML = cargo;
+            document.getElementById('span-ficha').innerHTML = ficha;
+            document.getElementById('img-profile').setAttribute('src', `/img/perfil/${foto}`)
+            if(ficha <= 0) document.getElementById('div-ficha').setAttribute('style', 'display: none')
+            else document.getElementById('div-ficha').setAttribute('style', 'display: flex')
+            ModalConfirmar.show()
+            document.getElementById('entregar_btn').focus();
+        }
+        function buscarUsuario(){
+            let identificacion = document.getElementById('identificacion');
+            let datos = new URLSearchParams();
+            datos.append('identificacion', identificacion.value);
+            fetch('/entrega', {
+                body: datos,
+                method: 'POST',
+                headers: {'Authorization': 'Bearer '+token}
+            }).then(res=>res.json())
+            .then(res => {
+                if(res.status == 401) return Error401();
+                console.log(res)
+                if(res.length <= 0) return SwalAlert({title: '¡El usuario no tiene entregas pendientes para esta fecha!', icon: 'error', timer: 1000});
+                renderTabla(res, 'reclamados');
+                reclamarFRM(
+                    res[0].id_detalle, 
+                    res[0].identificacion, 
+                    res[0].Nombres, 
+                    res[0].producto, 
+                    res[0].cantidad, 
+                    res[0].valor, 
+                    res[0].Ficha, 
+                    res[0].Foto, 
+                    res[0].nombre_cargo
+                );
+                identificacion.value = '';
+                identificacion.focus()
+            }).catch(e=>{
+                alert(e)
+            })
+            return false;
+        }
+        function listarPorEstado(){
+            let estado = document.getElementById('estado').value;
+            if(estado == 'por entregar') listarPorEntregar();
+            if(estado == 'no reclamado') listarNoReclamados();
+            if(estado == 'reclamado')    listarReclamados();
+        }
+        function listarPorEntregar(){
+            fetch('/listar-no-entregados', {
+                method: 'POST',
+                headers: {'Authorization': 'Bearer '+token}
+            }).then(res=>res.json())
+            .then(res => {
+                if(res.status == 401) return Error401();
+                renderTabla(res, 'no reclamados')
+            }).catch(e=>{
+                alert(e)
+            })
+        }
+
+        function listarReclamados(){
+            fetch('/listar-reclamados', {
+                method: 'POST',
+                headers: {'Authorization': 'Bearer '+token}
+            }).then(res=>res.json())
+            .then(res => {
+                if(res.status == 401) return Error401();
+                renderTabla(res, '')
+            }).catch(e=>{
+                alert(e)
+            })
+        }
+
+        function listarNoReclamados(){
+            fetch('/listar-no-reclamados', {
+                method: 'POST',
+                headers: {'Authorization': 'Bearer '+token}
+            }).then(res=>res.json())
+            .then(res => {
+                if(res.status == 401) return Error401();
+                renderTabla(res, '')
+            }).catch(e=>{
+                alert(e)
+            })
+        }
+        function entregarProducto(){
+            let id_detalle = document.getElementById('id-detalle').value;
+            let datos = new URLSearchParams();
+            datos.append('id_detalle', id_detalle)
+            fetch('/entregar-producto', {
+                method: 'POST',
+                body: datos,
+                headers: {'Authorization': 'Bearer '+token}
+            }).then(res=>res.json())
+            .then(res => {
+                console.log(res)
+                if(res.status == 401) return Error401();
+                Swal.fire({
+                    title: res.titulo,
+                    icon: res.icono,
+                    text: res.mensaje,
+                    timer : res.timer,
+                    showConfirmButton: false,
+                    focusConfirm: false,
+                })
+                ModalConfirmar.hide();
+                document.getElementById('identificacion').focus();
+                listarPorEntregar();
+                CantidadPendiente();
+            })
+        }
+        function productoNoReclamado(id){
+            fetch('/producto-no-entregado/'+id, {
+                method: 'POST',
+                headers: {'Authorization': 'Bearer '+token}
+            }).then(res => res.json())
+            .then(res => {
+                if(res.status == 401) return Error401();
+                Swal.fire({
+                    title: res.titulo,
+                    icon: res.icono,
+                    text: res.mensaje,
+                    timer : res.timer
+                })
+                listarPorEntregar();
+                CantidadPendiente();
+            })
+        }
+        function confirmarNoReclamado(id){
+            Swal.fire({
+                title: '¿Deseas declarar este producto como no reclamado?',
+                showDenyButton: true,
+                confirmButtonText: 'Confirmar',
+                denyButtonText: `Cancelar`,
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    productoNoReclamado(id)
+                } else if (result.isDenied) {}
+            })
+        }
+        /* =========TABLA RENDERIZADA=========== */
+        function renderTabla(datos, tipo){
+            let arrayDatos = [];
+            let accionBTN = '';
+            datos.forEach(element => {
+                if(tipo == 'reclamados') accionBTN = `
+                    <button onclick="reclamarFRM('${element.id_detalle}', '${element.identificacion}', '${element.Nombres}', '${element.producto}', '${element.cantidad}', '${element.valor}', '${element.Ficha}', '${element.Foto}', '${element.nombre_cargo}')" class='Reclamado  btn btn-success'>Entregar</button>`
+                if(tipo == 'no reclamados') {accionBTN = `
+                    <button onclick="reclamarFRM('${element.id_detalle}', '${element.identificacion}', '${element.Nombres}', '${element.producto}', '${element.cantidad}', '${element.valor}', '${element.Ficha}', '${element.Foto}', '${element.nombre_cargo}')" class='Reclamado  btn btn-success'>Entregar</button>
+                    <button onclick="confirmarNoReclamado('${element.id_detalle}')" class='btn btn-secondary'>No reclamado</button>`
+                }
+                
+                let dato = {
+                    id_detalle : element.id_detalle,
+                    identificacion : element.identificacion,
+                    Nombres : element.Nombres,
+                    producto : element.producto,
+                    cantidad : element.cantidad,
+                    valor : element.valor,
+                    Estado : element.Estado,
+                    Fecha : formatDate(element.fecha),
+                    Accion : accionBTN
+                }
+                arrayDatos.push(dato)
+            });
+            var table = $('#productos').DataTable({
+                lengthChange: false,
+                autoWidth: false,
+                destroy: true,
+                responsive: true,
+                data: arrayDatos,
+                columns: [
+                    {"data": "id_detalle"},
+                    {"data": "identificacion"},
+                    {"data": "Nombres"},
+                    {"data": "producto"},
+                    {"data": "cantidad"},
+                    {"data": "valor"},
+                    {"data": "Estado"},
+                    {"data": "Fecha"},
+                    {"data": "Accion"}
+                ]
+            })
+        }
+        function CantidadPendiente(){
+            fetch('/cantidad-pendiente', {
+                method: 'GET',
+                headers: {'Authorization': 'Bearer '+token}
+            }).then(res=>res.json())
+            .then(res => {
+                document.getElementById('cantidad-pendiente').innerHTML = res[0].cantidad ? res[0].cantidad : 0;
+            })
+            
+        }
+        function SwalAlert(data){
+            if(!data.timer) data.timer = 1500;
+            Swal.fire({
+                title: data.title,
+                icon: data.icon,
+                text: data.text,
+                timer : data.timer
+            })
+        } 
+        function Error401(){
+            SwalAlert({title: 'Error', icon: 'error', text: 'No autorizado'});
+        }
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('estado').value = 'por entregar';
+            listarPorEstado();
+            CantidadPendiente();
+        });
+    </script>
+</body>
+</html>
+ 
+

@@ -1,0 +1,300 @@
+.tarjeta-reserva{
+    padding: .4rem .5rem;
+    position: relative;
+    overflow: hidden;
+}
+.tarjeta-reserva .cuerpo-tarjeta{
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 10px 0 0 0;
+    box-shadow: 0 0 3px #686868;
+}
+.tarjeta-reserva .informacion-tarjeta {
+    padding: .8rem .8rem 2rem .8rem;
+}
+
+.tarjeta-reserva .nombre-producto{
+    font-size: 1.3rem;
+}
+
+.tarjeta-reserva .descripcion-producto{
+    font-size: .98rem;
+}
+
+
+.tarjeta-reserva #precio-producto{
+    padding: .3rem 2.5rem;
+    width: 150px;
+    text-align: center;
+    background: #A84D07;
+    color: #fff;
+    position: absolute;
+    top: 8px;
+    right: -25px;
+    transform: rotate(35deg);
+}
+
+.tarjeta-reserva .imagen-producto{
+    width: auto;
+    display: block;
+    margin: 0 auto 0 auto;
+    max-height: 180px;
+    max-width: 96%;
+}
+
+.InicioReserva {
+    font-weight: 900;
+    margin-bottom: 30px;
+    color: rgb(77, 146, 20);
+    display: inline-block;
+}
+.TituloTabla {
+    font-weight: 600;
+    color: rgb(77, 146, 20);
+    text-align: center;
+    display: inline-block;
+}
+.infoReserva {
+    font-size: .8em;
+    border: none;
+}
+.date {
+    padding-top: 15px;
+    padding-right: 25px;
+    height: 0;
+    font-size: 1.3em;
+    float: right;
+}
+.icon-calendar:before {
+    content: "\e953";
+    padding: 5px;
+}
+/* ========Estilos tabla======== */
+.table > thead {
+    background-color: rgb(87, 163, 25);
+    color: #fff;
+    font-size: .9em;
+}
+th {
+    text-align: center;
+}
+.centerNombre {
+    text-align: center;
+}
+.totalText{
+    font-size: 1.7em;
+    font-weight: 300;
+    padding-left: 10px;
+}
+.totalReserva {
+    font-size: 1.5em;
+    font-weight: 800;
+    float: right;
+    padding-right: 60px;
+}
+/* ==========DIV USUARIOS RESERVA============ */
+#listar-personas {
+    box-sizing: border-box;
+    max-height: 145px;
+    overflow-y: scroll;
+}
+/* ========================= */
+.id_movimiento {
+    margin-left: 10px;
+    width: 30%;
+    font-weight: 800;
+    border: none;
+    background-color: white;
+    font-size: 1.1em;
+    display: inline-block;
+}
+.icon-bin{
+    margin: 5px;
+    font-size: 1em;
+    text-decoration: none;
+    border-radius: 2px;
+    padding: 5px;
+    background-color: red;
+    color: #fff;
+}
+.icon-bin:hover {
+    color:whitesmoke;
+}
+/* ========Estilos formulario======= */
+.form-Reservas{
+    border-radius: 8px;
+    padding: 10px 0;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 1fr  ;
+    grid-template-rows: "reserva"
+                        "separador"
+                        "borde";
+    grid-template-areas: "reserva"
+                         "separador"
+                         "borde" ;
+}
+.tituloRese{
+    grid-area: h-title;
+    display: block;
+    font-size: 2em;
+    font-weight: 900;
+    color: rgb(77, 146, 20);
+}
+.separadorRese{
+    grid-area: separador;
+    width: 20%;
+    height: 3px;
+    background: rgb(94, 179, 25);
+    border: none;
+    border-radius: 5px;
+    min-width: 40px; 
+}
+.borderRese {
+    box-sizing: border-box;
+    border-radius: 5px;
+    padding: 1rem 1.2rem;
+    border: solid 2px #dbdbdb;
+}
+.btn-cantidad{
+    grid-area: cantidad;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: .2fr 0fr .2fr 2fr;
+    grid-template-rows: "cant cant none none" "btn1 btn2 btn3 precio" 
+                        "estado estado estado reserva ";
+    grid-template-areas:
+        "cant cant cant persona "
+        "btn1 btn2 btn3 precio"
+        "estado estado estado reserva";
+}
+.btn1{
+    grid-area: btn1;
+    font-size: 20px;
+    border: none;
+    background: rgb(240, 237, 237);
+    padding: .5px .5px .5px .5px;
+    border-radius: none;
+    cursor: pointer;
+}
+.btn2{
+    grid-area: btn2;
+    width: 30px;
+    border: none;
+    font-size: 1em;
+    background: none;
+    text-align: right;
+}
+.btn3{
+    grid-area: btn3;
+    font-size: 20px; 
+    border: none;
+    background: rgb(237, 231, 231);
+    border-radius: 2px;
+    padding: .5px .5px .5px .5px;
+    cursor: pointer;
+}
+.cant{
+    grid-area: cant;
+    font-size: 1.1em;
+    font-weight: 800px;
+}
+.precio{
+    grid-area: precio;
+    color: rgb(54, 54, 54, .7);
+    font-size: 1.8em;
+    font-weight: 0;
+    text-align: center;
+}
+/* =========Estilos Cartas========== */
+.grid-row {
+    display: grid;
+    gap: .5rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+}
+.card-header {
+    color: white;
+    font-weight: 400;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0;
+    background-color: #A84D07;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    text-align: center;
+    font-size: 1.2em;
+    border-radius: 10px 10px 0px 0px;
+}
+.card-title {
+    margin-top: 0.8rem;
+    margin-bottom: 0.5rem;
+    font-size: 1em;
+    color: rgb(46, 44, 44);
+}
+.info_pdto {
+    font-weight: 600;
+    padding-right: 5px;
+}
+.info-descuento{
+    text-decoration:line-through;
+    color: rgb(84, 84, 84);
+}
+.info_pdto_d{
+    font-weight: 600;
+    padding-right: 5px;
+    color: rgb(0, 147, 0);
+}
+p {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: .7em;
+}
+.card-footer {
+    padding: 0.5rem ;
+    background-color: rgba(207, 202, 202, 0.18);
+    border-top: 1px solid rgba(0,0,0,.125);
+}
+
+
+#main-cont{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#content-md{
+    width: auto;
+    background: rgba(255, 255, 255, .305);
+}
+
+
+
+/* ANUNCIOS DE CARROUSEL */
+.contenido-anuncio{
+    min-height: 250px;
+    max-width: 500px;
+    margin: 1.5rem auto;
+    background: #fff;
+}
+.carousel-item{
+    background: #fff;
+}
+.carousel-control-next{
+    width: 10%;
+    background: linear-gradient(90deg, transparent 80%, rgb(214, 214, 214))
+}
+.carousel-control-prev{
+    width: 10%;
+    background: linear-gradient(90deg, rgb(214, 214, 214),  transparent 80%)
+}
+.carousel {
+    border: solid 1px rgb(214, 214, 214);
+}
+
+@media (max-width: 576px) {
+    .carousel-control-next, .carousel-control-prev {
+        display: none;
+    }
+    .contenido-anuncio{
+        margin: 1.5rem 1rem;
+    }
+}

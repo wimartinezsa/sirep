@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <link rel="stylesheet" href="css/tabla.listas.css">
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+    </div>
+    <div class="main-contenedor">
+        <div class="body-info-section">
+            <div class="full-container">
+                <div class="breadcrumb">
+                   
+                </div>
+                <!-- <div class="table-admin mt-1"> -->
+                    <h1 class="h-title">Venta Total Puntos de Venta</h1>
+                    <form id="form-comparar-tiempo">
+                        <div class="row mb-3">
+                            <div class="form-group col-4">
+                                <label for="formGroupExampleInput">Fecha Inicio</label>
+                                <input type="date" class="form-control" id="date-start">
+                            </div>
+                            <div class="form-group col-4">
+                                <label for="formGroupExampleInput">Fecha Fin</label>
+                                <input type="date" class="form-control" id="date-end">
+                            </div>
+                            <div class="form-group col-4">
+                                <button class="btn btn-primary" type="button" onclick="Comparar_reporVent();">Buscar</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="table-admin mt-1">
+                        <table id="reporVent" class="table-info">
+                            <thead>
+                                <th>Punto de Venta </th>
+                                <th>Valor Vendido</th>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                      </table>                    
+                    </div><br>       
+                <!-- </div> -->
+            </div> 
+        </div>
+    </div>
+    <%- include('../partials/footer') %>
+    <%- include('../partials/scripts.ejs') %> 
+    <%- include('../partials/report-scripts.ejs') %> 
+
+</body>
+</html>
+<script src="js/catch.reporte.js"></script>

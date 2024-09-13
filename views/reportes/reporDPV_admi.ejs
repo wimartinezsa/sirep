@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <link rel="stylesheet" href="css/tabla.listas.css">
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+    </div>
+    <div class="main-contenedor">
+        <div class="body-info-section">
+            <div class="full-container">
+                <div class="breadcrumb">
+   
+                </div>
+                <!-- <div class="table-admin mt-1"> -->
+                    <h1 class="h-title">Stock Disponibles Punto de Venta</h1>
+                    <div class="table-admin mt-1">
+                        <table id="reporDPV" class="table-info">
+                            <thead>
+                                <th>Nombre Punto Venta</th>
+                                <th>Nombre del producto</th>
+                                <th>Stock disponible</th>                       
+                            </thead>
+                            <tbody>
+                            </tbody>
+                      </table>                    
+                    </div><br>
+                <!-- </div> -->
+            </div> 
+        </div>
+    </div>
+    <%- include('../partials/footer') %>
+    <%- include('../partials/scripts.ejs') %> 
+    <%- include('../partials/report-scripts.ejs') %> 
+
+</body>
+</html>
+<script src="js/catch.reporte.js"></script>
+<script>window.onload = MostrarAdminreporDPV();</script>

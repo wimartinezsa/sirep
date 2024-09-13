@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+    </div>
+    <div class="main-contenedor">
+        <section class="body-info-section">
+            <div class="contnet-section-info" style="min-height: 50vh;">
+                <div class="full-container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h1 class="h-title">Tutoriales de ayuda</h1>
+                            <hr class="separador-text">
+                            <a href="/ayuda/MANUAL_USUARIO_APRENDICES_✅.pdf" target="_blank"><div>Manual de usuario</div></a>
+                            <%if (profile.Rol.trim() == 'Admin') {%>
+                            <a href="/ayuda/MANUAL_TECNICO_SIREP_✅.pdf" target="_blank"><div>Manual técnico</div></a>
+                            <%} %> 
+                            <%if (profile.Rol == 'Punto Venta') {%>
+                                <a href="/ayuda/MANUAL_USUARIO_ADMIN_PUNTO_DE_VENTA_✅.pdf" target="_blank"><div>Manual de usuario - P.V</div></a>
+                            <%} %> 
+                            <div class="mb-2"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <h1 class="h-title" style="margin: 0;">Mi código de acceso</h1>
+                            <p><img id="barcode" display: block;"></img></p>
+                            <p><b>Nota:</b> Se recomienda que sea impreso por medio de laser para ser leído por el scanner.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <%- include('../partials/footer') %>
+    <%- include('../partials/scripts.ejs') %> 
+    <script src="js/libraries/JsBarcode.all.min.js"></script>
+    <script>
+        JsBarcode("#barcode", "<%=profile.identificacion%>",{
+            width: 2,
+            height: 50,
+        });
+    </script>
+</body>
+</html>
+ 
+

@@ -1,0 +1,66 @@
+.content_form_inventario{
+    display: grid;
+    gap: 10px;
+    padding: 12px;
+    grid-template:
+                   "tittleproducto tittlepuntventa " 20px
+                   "contentproducto contentventa " auto
+                   "boton boton" 50px/ 1fr 1fr;
+}
+input[type="text"]:disabled, input[type="number"]:disabled, .cantidad-invent{
+    color: #3b3c36;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+.line-head, .line-bodega, .line-produccion{
+    color: white;
+}
+.line-head{
+    background-color: rgb(83, 159, 20);
+    text-align: center;
+}
+.line-produccion{
+    background-color:darkorange;
+}
+.line-bodega{
+    background-color: rgb(0, 128, 128);
+}
+thead > tr{
+    text-align: center;
+}
+tbody > tr{
+    text-align: center;
+}
+
+#id_vent, #id_pdto_inventario, #id_invetario{
+    display: none;
+}
+.inventStock{
+    grid-area: stock;
+}
+.label_producto{
+    grid-area: tittleproducto;
+}
+.content_producto{
+    grid-area: contentproducto;
+}
+.label_puntventa{
+    grid-area: tittlepuntventa;
+}
+.content_puntventa{
+    grid-area: contentventa;
+}
+.label_producto, .label_puntventa, .boton_registro{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+    font-size: 1.1em;
+}
+
+.boton_registro{
+    background-color: rgb(83, 159, 20);
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    grid-area: boton;
+}

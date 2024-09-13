@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head'); %>
+    <link rel="stylesheet" href="css/pop-up.css">
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <div class="limiter-width-page">
+            <div class="header-page">
+                <div class="header-logo"><img src="img/logos/logoSena.png"></div>
+                <div class="right-logo"><img src="img/logos/centro_user.png"></div>
+                <div class="empresa-logo"><img src="img/logos/logoSirep.png"></div>
+            </div>
+        </div>
+        <header>
+            <!-- MENU VISIBLE -->
+            <div class="menu-visible">
+                <button class="button-login" id="OpenLogin">
+                    Iniciar Sesión
+                </button>
+            </div>
+        </header>
+    </div>
+    <div class="main-contenedor">
+		<section class="body-info-section">
+			<h1 class="h-title">404</h1>
+			<p>Page not found</p>
+			<a href="/">Home</a>
+		</section>
+        <section class="body-info-section"></section>
+        <div class="popup-wrapper">
+            <div class="popup">
+                <div class="popup-close">x</div>
+                <div class="popup-content">
+                    <h3>Login</h3>
+                    <div class="wrapper-form-data">
+                        <div class="input-data">
+                            <input type="text" id='user' size="40" maxlength="50" required="">
+                            <div class="underline">
+                            </div>
+                            <label>Usuario</label>
+                        </div>
+                    </div>
+                    <div class="wrapper-form-data">
+                        <div class="input-data">
+                            <input type="password" id="password" size="40" maxlength="50" required="">
+                            <div class="underline"></div>
+                            <label>Contraseña</label>
+                        </div>
+                    </div>
+                    <div id="error-message"></div>
+                    <button id="btnSession">Iniciar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('./partials/footer'); %>
+</body>
+</html>
+<script src="js/libraries/bootstrap.min.js"></script>
+<script src="js/libraries/jquery-3.2.1.js"></script>
+<script src="js/pop-up.js"></script>
+<script>
+    var myCarousel = document.querySelector('#corrousel-sena')
+    var carousel = new bootstrap.Carousel(myCarousel, {
+        interval: 5000,
+    })
+    let btnSession = document.getElementById("btnSession");
+    btnSession.addEventListener("click", ()=> {
+        let user = document.getElementById("user").value;
+        let password = document.getElementById("password").value;
+        let validate = {user, password}
+        let up = document.getElementById("select-up");
+        let pv = document.getElementById("select-pv");
+       
+        let datos = new URLSearchParams();
+        datos.append('user', user);
+        datos.append('password', password);
+        if(up) datos.append('up', up.value);
+        if(pv) datos.append('pv', pv.value);
+        
+        if(!validateFields(validate)) return;
+        fetch('/auth/login', {
+            method: 'POST',
+            body: datos
+        })
+        .then(data => {return data.json()})
+        .then(res => {
+            console.log(res)
+            if(res.status == 'error') return createErrorMessage();
+            if(res.status == 'error_up') return createSelectUP(res);
+            if(res.status == 'error_pv') return createSelectPV(res);
+            localStorage.setItem('token', res.token)
+            window.location.href = "admin";
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    })
+    function validateFields(data){
+        if(!data.user) {
+            return user.focus();
+        }
+        if(!data.password) {
+            return password.focus();
+        }
+        return true;
+    }
+    function createErrorMessage(){
+        let errorDiv = document.getElementById('error-message');
+        let paddingDiv = document.createElement('div');
+        let dangerSpan = document.createElement('span');
+        let errorMSG = document.createTextNode('Usuario o contraseña incorrecta')
+        
+        dangerSpan.setAttribute('class', 'danger-span')
+        dangerSpan.appendChild(errorMSG);
+
+        paddingDiv.appendChild(dangerSpan);
+        paddingDiv.setAttribute('class', 'padding-wrapper')
+        paddingDiv.setAttribute('id', 'wrong-data');
+        
+        errorDiv.innerHTML = '';
+        errorDiv.appendChild(paddingDiv);
+    }
+    function createSelectPV(data){
+        let errorDiv = document.getElementById('error-message');
+        let paddingDiv = document.createElement('div');
+        let dangerSpan = document.createElement('span');
+        let errorMSG = document.createTextNode('Selecciona el PV a administrar')
+        let select = document.createElement('select');
+        data.data.forEach(element => {
+            let option = document.createElement('option');
+            option.setAttribute('value', element.Id_punto_vent);
+            option.appendChild(document.createTextNode(element.Nombre))
+            select.appendChild(option);
+        });
+        select.setAttribute('id', 'select-pv')
+        select.setAttribute('class', 'mt-1 form-select');
+        
+        dangerSpan.setAttribute('class', 'danger-span')
+        dangerSpan.appendChild(errorMSG);
+
+        paddingDiv.appendChild(dangerSpan);
+        paddingDiv.appendChild(select);
+        paddingDiv.setAttribute('class', 'padding-wrapper')
+        paddingDiv.setAttribute('id', 'wrong-data');
+        
+        errorDiv.innerHTML = '';
+        errorDiv.appendChild(paddingDiv);
+    }
+    function createSelectUP(data){
+        console.log(data)
+        let errorDiv = document.getElementById('error-message');
+        let paddingDiv = document.createElement('div');
+        let dangerSpan = document.createElement('span');
+        let errorMSG = document.createTextNode('Selecciona la UP a administrar')
+        let select = document.createElement('select');
+        data.data.forEach(element => {
+            let option = document.createElement('option');
+            option.setAttribute('value', element.codigo_up);
+            option.appendChild(document.createTextNode(element.Nombre))
+            select.appendChild(option);
+        });
+        select.setAttribute('id', 'select-up')
+        select.setAttribute('class', 'mt-1 form-select');
+        
+        dangerSpan.setAttribute('class', 'danger-span')
+        dangerSpan.appendChild(errorMSG);
+
+        paddingDiv.appendChild(dangerSpan);
+        paddingDiv.appendChild(select);
+        paddingDiv.setAttribute('class', 'padding-wrapper')
+        paddingDiv.setAttribute('id', 'wrong-data');
+        
+        errorDiv.innerHTML = '';
+        errorDiv.appendChild(paddingDiv);
+    }
+</script>

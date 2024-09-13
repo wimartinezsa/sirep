@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+    </div>
+    <div class="main-contenedor">
+        <div class="body-info-section">
+            <div class="full-container">
+                <div class="breadcrumb"></div>
+                <!-- <div class="table-admin mt-1"> -->
+                    <h1 class="h-title">Historial de compras</h1>
+                    <div class="table-admin mt-1">
+                        <table id="historial-table" id="table-info" class="table table-bordered table-striped">
+                            <thead>
+                                <th>Nombre producto</th>
+                                <th>Asignado</th>
+                                <th>Valor</th>
+                                <th>Cantidad</th>
+                                <th>Descuento</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Fecha Compra</th>
+                                <th>Fecha Reclamo</th>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                      </table>                    
+                    </div><br>
+                <!-- </div> -->
+            </div> 
+        </div>
+    </div>
+    <!------MODAL DETALLE------>
+    <div class="modal fade" id="modal-detalle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-s">
+            <div class="modal-content col-4">
+                <div class="modal-header">
+                    Descripción
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="body-detalle"></div>
+            </div>
+        </div>
+    </div>
+    <%- include('../partials/footer') %>
+    <%- include('../partials/scripts.ejs') %> 
+    <script>
+        var modalDetalle = new bootstrap.Modal(document.getElementById('modal-detalle'), { keyboard: false });
+        function Listar_Historial_Reservas(){
+            fetch('/Listar_Reservas_Pendientes',{
+                method:'post',
+                headers: {'Authorization': 'Bearer '+token}
+            })
+            .then(res=>res.json())
+            .then(res => {
+                let json = [];
+                let array = {}
+                res.forEach(element => {
+                    let textcolor = '';
+                    let estadoINFO = '';
+                    switch (element.Estado) {
+                        case 'Reservado': 
+                            textcolor = 'font-bold text-success';
+                            estadoINFO = `<span class="${textcolor}">${element.Estado}</span>`;
+                        break;
+                        case 'Facturado': 
+                            textcolor = 'font-bold text-orange';
+                            estadoINFO = `<span class="${textcolor}">${element.Estado}</span>`;
+                        break;
+                        case 'Rechazado': 
+                            textcolor = 'font-bold text-danger';
+                            estadoINFO = `<a class="${textcolor} link-detalle" href="javascript:DetalleRechazo(${element.Id_movimiento}, '${element.descripcion}')">${element.Estado}</a>`;
+                        break;  
+                        default: 
+                            textcolor = 'font-bold text-danger';
+                            estadoINFO = `<span class="${textcolor}">${element.Estado}</span>`;
+                        break;
+                    }
+                    
+                    let array = {
+                        Nombre: element.producto,
+                        asignado: element.Nombres,
+                        valor: element.valor,
+                        cantidad: element.cantidad,
+                        porcentaje: element.porcentaje,
+                        subtotal: element.subtotal,
+                        Estado: estadoINFO,
+                        Fecha: formatDate(element.Fecha),
+                        FechaEntrega: formatDate(element.Fecha_entrega_detalle)
+                    }
+                    if(element.id_detalle) json.push(array);
+                });
+                $('#historial-table').DataTable({
+                    "responsive": true,
+                    "autoWidth": false,
+                    "data":json,
+                    "order":[[6, 'desc']],
+                    columns:[
+                        {"data": "Nombre"},
+                        {"data": "asignado"},
+                        {"data": "valor"},
+                        {"data": "cantidad"},
+                        {"data": "porcentaje"},
+                        {"data": "subtotal"},
+                        {"data": "Estado"},
+                        {"data": "Fecha"},
+                        {"data": "FechaEntrega"},
+                    ]
+                });
+            })
+        }
+        function DetalleRechazo(id, descripcion){
+            let detalleBody = document.getElementById('body-detalle');
+            detalleBody.innerHTML = descripcion;
+            modalDetalle.show();
+        }
+        Listar_Historial_Reservas();
+    </script>
+</body>
+</html>

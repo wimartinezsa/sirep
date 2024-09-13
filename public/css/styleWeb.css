@@ -1,0 +1,144 @@
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] { -moz-appearance:textfield; }
+
+
+
+#td{
+    background: rgb(234, 229, 229);
+    font-size: 15px;
+    
+}
+.span-verde,
+.span-rojo{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 5px;
+  margin-bottom: 5px;
+  color: #fff;
+  font-size: .7rem;
+  border-radius: 25px;
+}
+.span-verde{
+  background: rgb(103, 163, 118);
+}
+.span-rojo{
+  background: rgb(163, 103, 103);
+}
+link-actualizar, .link-actualizar {
+    border: none;
+    background: rgb(224 64 64);
+    border-radius: 5px;
+    width: 90px;
+    color: white;
+}
+.modal-header {
+  color: white;
+  background: #ff6712;
+}
+
+.sena{
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 20px;
+  
+}
+.total{
+  font-size: 20px;
+  margin-left: 20px;
+}
+.id{
+  width: 30px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.sutbox{
+  display: flex;
+  padding: 5px;
+}
+.sutbox > p{
+  margin-left: 10px;
+}
+.detalle{
+  margin-top: 2px;
+  padding: 5px;
+  margin-right: 6px;
+  border-radius:5px ;
+  text-decoration: none;
+  background-color: #237acc;
+  color: #fff;
+}
+.detalle:hover{
+  color: #fff;
+  background-color: #3188da;
+}
+.Anular{
+  margin-right: 20px;
+  background-color: #e52222;
+}
+.Finalizar{
+  background-color: #237acc;
+}
+.factura{
+  margin-left: 6px;
+  border-radius:5px ;
+  text-decoration: none;
+  color: #3188da;
+  font-size: 25px;
+}
+
+.icon-edit-pencil:hover{
+  color: #3188da;
+}
+.boton{
+  border: 0;
+  border-radius: 5px;
+  background: #bd0505;
+}
+.boton:hover{
+  background: #880808;
+}
+.icon-clear{
+  color: #fff;
+  font-size: 20px;
+}
+.print{
+  text-decoration: none;
+}
+.icon-file-pdf-o{
+  margin-left: 6px;
+  color: #bd0505;
+  font-size: 25px;
+}
+.delate{
+  margin-left: 6px;
+  border-radius:5px ;
+  text-decoration: none;
+  color: #bd0505;
+  font-size: 25px;
+}
+.boton-editar{
+  margin-left: 6px;
+  padding: 5px;
+  border: 0;
+  background: 0;
+  text-decoration: none;
+  color: #1e6eb9;
+  font-size: 30px;
+}
+#lista_filter{
+  display: flex;
+  justify-content: flex-end;
+}
+#lista_filter input{
+  margin-right: 20px;
+}
+.input-s {
+  border: 0;
+  background: 0;
+}

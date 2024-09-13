@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <link rel="stylesheet" href="css/calendario.css">
+    <link rel="stylesheet" href="js/calendar/main.css">
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+        <style>
+            a {
+                color: #252525;
+                text-decoration: none;
+            }
+            .fc-h-event { cursor: pointer; }
+        </style>
+    </div>
+    <!-- MODAL -->
+    <div class="modal fade" id="modal-detalles" tabindex="-1" aria-labelledby="ModalArchivo" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 1000px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fecha-entrega"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 mt-1">
+                        <table class="table table-bordered" id="productos-fecha">
+                            <thead>
+                                <th>Identificación</th>
+                                <th>Nombre</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-contenedor">
+        <section class="body-info-section">
+            <div class="contnet-section-info" style="min-height: 50vh;">
+                <h1 class="h-title">Estado de entrega de productos por fecha</h1>
+                <div class="full-container mt-2">
+                    <div class="row">
+                        <div id='calendar'></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts.ejs') %> 
+    <script src="js/calendar/main.js"></script>
+    <script>
+        var selectedDate = {
+            fecha: null,
+            entregado: null
+        };
+        let fechaActual = new Date();
+        fechaActual = fechaActual.toISOString().slice(0, 10);
+        let modalDetalles = new bootstrap.Modal(document.getElementById('modal-detalles'), {keyboard: false});
+        document.addEventListener('DOMContentLoaded', () => {
+            listarCalendario();
+        });
+        async function listarCalendario(){
+            var calendarEl = document.getElementById('calendar');
+            var events = [];
+            var Entregado   = await listarFechas('Entregado');
+            var noEntregado = await listarFechas('No entregado');
+            var noReclamado = await listarFechas('No reclamado');
+
+            noEntregado.forEach(fecha => {
+                var color = "green";
+                if(fechaActual > fecha.fecha_entrega) color = "#4e4e4e";
+                let event = {
+                    title: 'Por entregar ' + fecha.Entregas,
+                    start: fecha.fecha_entrega,
+                    fecha: fecha.fecha_entrega,
+                    entregado: 'No entregado',
+                    color
+                }
+                events.push(event);
+            }); 
+            
+            noReclamado.forEach(fecha => {
+                let event = {
+                    title: 'No reclamados ' + fecha.Entregas,
+                    start: fecha.fecha_entrega,
+                    fecha: fecha.fecha_entrega,
+                    entregado: 'No reclamado',
+                    color: 'red'
+                }
+                events.push(event);
+            });
+             
+            Entregado.forEach(fecha => {
+                let event = {
+                    title: 'Entregados ' + fecha.Entregas,
+                    start: fecha.fecha_entrega,
+                    fecha: fecha.fecha_entrega,
+                    entregado: 'Entregado',
+                    color: 'blue'
+                }
+                events.push(event);
+            });
+             
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                headerToolbar: {
+                    left: 'prevYear,prev,next,nextYear today',
+                    center: 'title',
+                    right: 'dayGridMonth,dayGridWeek,dayGridDay'
+                },
+                locale: 'es',
+                editable: false,
+                navLinks: true, // can click day/week names to navigate views
+                dayMaxEvents: true, // allow "more" link when too many events
+                events,
+                eventClick: function(info) {
+                    modalDetalles.show();
+                    var {fecha, entregado} = info.event._def.extendedProps;
+                    selectedDate.entregado = entregado;
+                    selectedDate.fecha = fecha;
+                    document.getElementById('fecha-entrega').innerHTML = fecha;
+                    ListarFacturas(fecha, entregado);
+                }
+            });
+            calendar.render();  
+        }
+        function ListarFacturas(fecha, entregado){
+            let datos = new URLSearchParams();
+            datos.append('fecha', fecha); 
+            datos.append('entregado', entregado);
+            fetch('/listar-facturas', {
+                method: 'POST',
+                body: datos,
+                headers: {'Authorization': 'Bearer '+token}
+            }).then(res=>res.json())
+            .then(data => {
+                if(fechaActual >= fecha){
+                    for (let i = 0; i < data.length; i++) {
+                        let Accion = 'N.A';
+                        if(data[i].Estado == 'No entregado')
+                            Accion = `<button onclick="confirmarNoReclamado('${data[i].id_detalle}')" class='btn btn-secondary'>No reclamado</button>`;
+                        data[i] = {...data[i], Accion}
+                    }
+                } else {
+                    for (let i = 0; i < data.length; i++) {
+                        data[i] = {...data[i], Accion: 'N.A'}
+                    }
+                }
+                $('#productos-fecha').DataTable({
+                    lengthChange: false,
+                    autoWidth: false,
+                    destroy: true,
+                    responsive: true,
+                    data: data,
+                    columns: [
+                        {"data": "identificacion"},
+                        {"data": "Nombres"},
+                        {"data": "producto"},
+                        {"data": "cantidad"},
+                        {"data": "valor"},
+                        {"data": "Estado"},
+                        {"data": "Accion"},
+                    ]
+                });
+            }).catch(e=>{
+                alert(e)
+            })
+        }
+        function confirmarNoReclamado(id){
+            Swal.fire({
+                title: '¿Deseas declarar este producto como no reclamado?',
+                showDenyButton: true,
+                confirmButtonText: 'Confirmar',
+                denyButtonText: `Cancelar`,
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    productoNoReclamado(id)
+                } else if (result.isDenied) {}
+            })
+        }
+        function productoNoReclamado(id){
+            fetch('/producto-no-entregado/'+id, {
+                method: 'POST',
+                headers: {'Authorization': 'Bearer '+token}
+            }).then(res => res.json())
+            .then(res => {
+                if(res.status == 401) return Error401();
+                Swal.fire({
+                    title: res.titulo,
+                    icon: res.icono,
+                    text: res.mensaje,
+                    timer : res.timer
+                })
+                let {fecha, entregado} = this.selectedDate;
+                ListarFacturas(fecha, entregado);
+                listarCalendario();
+            })
+        }
+        
+        const listarFechas = (entregado) => {
+            return new Promise((resolve, reject) => {
+                let datos = new URLSearchParams();
+                datos.append('entregado', entregado);
+                fetch('/listar-fechas-facturas', {
+                    body: datos,
+                    method: 'POST',
+                    headers: {'Authorization': 'Bearer '+token}
+                }).then(res => res.json())
+                .then(data => resolve(data))
+                .catch(e => reject(e));
+            });
+        }
+    </script>
+</html>

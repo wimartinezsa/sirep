@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <link rel="stylesheet" href="css/tabla.listas.css">
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+    </div>
+    <div class="main-contenedor">
+        <div class="body-info-section">
+            <div class="full-container">
+                <div class="breadcrumb">
+                   
+                </div>
+                <div class="table-admin mt-1">
+                    <h1 class="h-title">Productos dados de baja</h1>
+                    <form id="form-comparar-tiempo">
+                        <div class="row">
+                            <div class="form-group col-4">
+                                <label for="formGroupExampleInput">Fecha Inicio</label>
+                                <input type="date" class="form-control" id="date-start">
+                            </div>
+                            <div class="form-group col-4">
+                                <label for="formGroupExampleInput">Fecha Fin</label>
+                                <input type="date" class="form-control" id="date-end">
+                            </div>
+                            <div class="form-group col-4">
+                                <button class="btn btn-primary mt-4 w-100" type="button" onclick="BuscarAutoconsumo();">Buscar</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="accordion mt-2" id="accordionExample" >
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Listado de Productos
+                            </button>
+                          </h2>
+                          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <table id="tabla-autoconsumo"  class="table-info">
+                                    <thead>                       
+                                        <th>Punto Venta</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Persona</th>
+                                        <th>Valor</th>
+                                        <th>Descripción</th>
+                                        <th>Fecha</th>
+                                    </thead>
+                                    <tbody></tbody>
+                              </table>      
+                            </div>
+                          </div>
+                        </div>
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Valor Total - Productos
+                            </button>
+                          </h2>
+                          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td><b>Total</b></td>
+                                        <td id="total-valor"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <%- include('../partials/footer') %>
+    <%- include('../partials/scripts.ejs') %> 
+    <%- include('../partials/report-scripts.ejs') %> 
+
+</body>
+</html>
+<script src="js/catch.reporte.js"></script>
+<script>
+    function BuscarAutoconsumo() {
+        let fecha_inicio = document.getElementById('date-start').value;
+        let fecha_final = document.getElementById('date-end').value;
+        /* ========================================================== */
+        let datosbusqueda = new URLSearchParams;
+        datosbusqueda.append("fechastart",fecha_inicio);
+        datosbusqueda.append("fechaend",fecha_final);
+        fetch('/reporte-productos-de-baja',{
+            method:'post',
+            body:datosbusqueda
+        }).then(res=>res.json())
+        .then(data=>{
+            let array = [];
+            let json = {};
+            var valor = 0;
+            data.forEach(element => {
+                valor += element.subtotal;
+                json = {
+                    "punto": element.punto,
+                    "producto": element.producto,
+                    "persona": element.Nombres,
+                    "cantidad": element.cantidad,
+                    "subtotal": element.subtotal,
+                    "descripcion": element.descripcion,
+                    "fecha": element.Fecha_detalle,
+                }
+                array.push(json);
+            });
+            document.getElementById('total-valor').innerHTML = currency(valor)+' $';
+            $('#tabla-autoconsumo').DataTable({
+                "paging":true,
+                "processing":true,
+                "responsive":true,
+                "destroy":true,
+                "data":array,
+                "autoWidth":false,
+                dom: 'Bfrtip',
+                buttons:[
+                    'copy','csv','excel','pdf','print'
+                ],
+                columns:[
+                    {"data": "punto"},
+                    {"data": "producto"},
+                    {"data": "persona"},
+                    {"data": "cantidad"},
+                    {"data": "subtotal"},
+                    {"data": "descripcion"},
+                    {"data": "fecha"},
+                ]
+            })
+        });
+    }
+    BuscarAutoconsumo();
+    
+</script>

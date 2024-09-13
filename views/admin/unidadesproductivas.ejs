@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <link rel="stylesheet" href="css/tabla.listas.css">
+    <link rel="stylesheet" href="css/form.unidadesproductivas.css">
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+    </div>
+    <div class="main-contenedor">
+        <div class="body-info-section">
+            <div class="full-container">
+                <div class="breadcrumb">
+                    <a href="/admin" class="go-home">Volver al inicio</a>  | <a href="#">Unidades Productivas</a>
+                </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h1 class="h-title">Administrar Unidades Productivas </h1>
+                        </div>
+                        <div class="col-md-6">
+                            <a onclick="vistaunidad();" class="btn-new"><i class="icon-library_add"></i> Nueva Unidad Productiva</a>
+                        </div>
+                    </div>  
+                    <div class="table-admin mt-1">
+                        <table id="table-up" class="table-info">
+                            <thead>
+                                <th>Id Unidad Productiva</th>
+                                <th>Nombre Unidad Productiva</th>
+                                <th>Descripcion</th>
+                                <th>Sede</th>
+                                <th>Estado</th>
+                                <th>Entrega</th>
+                                <th>Persona Encargada</th>
+                                <th>Admin</th>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- MODAL Registrar Unidad Productiva-->
+                    <div class="modal fade" id="modalunidadesproductivas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title">Registrar Unidad Productiva</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form  id="form_registro_unidadesproductivas" enctype="multipart/form-data">
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                <label for="formGroupExampleInput">Nombre</label>
+                                                <input class="form-control " type="text"  id="nombreunidad">
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="formGroupExampleInput">Descripcion</label>
+                                                <input class="form-control" id="descripcionunidad" type="text" value="" aria-label="default input example">
+                                            </div>
+                                        </div><br>
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                <label for="formGroupExampleInput">Sede</label>
+                                                <select id="sedeunidad" class="form-select" aria-label="Default select example">
+                                                    <<option selected disabled >Seleccionar...</option>
+                                                    <option value="Yamboro">Yamboro</option>
+                                                    <option value="Centro">Centro</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="formGroupExampleInput">Persona Encargada</label>
+                                                <select id="personaunidad" class="form-select" aria-label="Default select example">
+                                                        <option selected disabled >Seleccionar...</option>
+                                                        <% for(var i=0; i<Personas.length;i++){%>
+                                                        <option value="<%=Personas[i].identificacion%>"><%=Personas[i].Nombres%> </option>
+                                                        <%}
+                                                        %>
+                                                </select>
+                                            </div>
+                                        </div><br>
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                <label for="formGroupExampleInput">Estado</label>
+                                                <select id="estadounidad" class="form-select" aria-label="Default select example">
+                                                    <option selected disabled >Seleccionar...</option>
+                                                    <option value="Activo">Activo</option>
+                                                    <option value="Inactivo">Inactivo</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="formGroupExampleInput">¿Entrega productos Facturados? </label>
+                                                <select id="entregaunidad" class="form-select" aria-label="Default select example">
+                                                    <option selected disabled >Seleccionar...</option>
+                                                    <option value="1">Si </option>
+                                                    <option value="0">No </option>
+                                                </select>
+                                            </div>
+                                        </div><br>
+                                    </form>
+                                    <div class="row">
+                                        <div class="form-group col-6">
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <button class="btn btnact btn-lg" type="button" style="width: 100%;" onclick="RegistrarUnidad()">Registrar Unidad</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- MODAL -->
+                <!-- MODAL Actualizar Unidad Productiva-->
+                    <div class="modal fade" id="modalunidadesproductivasact" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title">Actualizar Unidad Productiva <input type="hidden"  id="id_up" size="5"  disabled></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form enctype="multipart/form-data">
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                <label for="formGroupExampleInput">Nombre</label>
+                                                <input class="form-control " type="text"  id="nombreunidadactual">
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="formGroupExampleInput">Descripcion</label>
+                                                <input class="form-control" id="descripcionunidadactual" type="text" value="Esta Unidad Productiva es del Sena" aria-label="default input example">
+                                            </div>
+                                        </div><br>
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                <label for="formGroupExampleInput">Sede</label>
+                                                <select id="sedeunidadactual" class="form-select" aria-label="Default select example">
+                                                    <option value="Yamboro">Yamboro</option>
+                                                    <option value="Centro">Centro</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="formGroupExampleInput">Persona Encargada</label>
+                                                <select id="personaunidaencargadadactual" class="form-select" aria-label="Default select example">
+                                                        <% for(var i=0; i<Personas.length;i++){%>
+                                                        <option value="<%=Personas[i].identificacion%>"><%=Personas[i].Nombres%> </option>
+                                                        <%}
+                                                        %>
+                                                </select>
+                                            </div>
+                                        </div><br>
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                <label for="formGroupExampleInput">Estado</label>
+                                                <select id="estadounidadactual" class="form-select" aria-label="Default select example">
+                                                    <option value="Activo">Activo</option>
+                                                    <option value="Inactivo">Inactivo</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="formGroupExampleInput">¿Entrega productos Facturados? </label>
+                                                <select id="entregaunidadactual" class="form-select" aria-label="Default select example">
+                                                    <option value="1">Si </option>
+                                                    <option value="0">No </option>
+                                                </select>
+                                            </div>
+                                        </div><br>
+                                    </form>
+                                    <div class="row">
+                                        <div class="form-group col-6">
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <button class="btn btnact btn-lg" type="button" style="width: 100%;" onclick="ActualizarUP();">Actualizar Unidad</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- MODAL -->   
+            </div> 
+        </div>
+    </div>
+    <%- include('../partials/footer') %>
+    <%- include('../partials/scripts.ejs') %> 
+</body>
+</html>
+<script src="js/catch.unidadesproductivas.js"></script>

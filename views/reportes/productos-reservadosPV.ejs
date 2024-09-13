@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <link rel="stylesheet" href="css/tabla.listas.css">
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+    </div>
+    <div class="main-contenedor">
+        <div class="body-info-section">
+            <div class="full-container">
+                <div class="breadcrumb">
+                   
+                </div>
+                <div class="table-admin mt-1">
+                    <div class="table-admin mt-1">
+                        <table id="reporte_reservados"  class="table-info">
+                            <thead>                       
+                                <th>Unidad Productiva</th>
+                                <th>Nombre del producto</th>
+                                <th>Cantidad reservados</th>
+                            </thead>
+                            <tbody></tbody>
+                      </table>                    
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+
+
+
+
+
+    
+    <%- include('../partials/footer') %>
+    <%- include('../partials/scripts.ejs') %> 
+    <%- include('../partials/report-scripts.ejs') %> 
+
+</body>
+</html>
+<script src="js/catch.reporte.js"></script>
+<script>
+    function ListarReservados(){
+        fetch('/reporte-productos-reservados',{
+            method:'GET'
+        }).then(res=>res.json())
+        .then(data=>{
+            $('#reporte_reservados').DataTable({
+                "paging":true,
+                "processing":true,
+                "autoWidh":false,
+                "responsive":true,
+                "destroy":true,
+                "data":data,
+                dom: 'Bfrtip',
+                columns:[
+                    {"data": "up"},
+                    {"data": "producto"},
+                    {"data": "cantidad"},
+                ]
+            })
+            console.log(data)
+        }).catch(e=>console.log(e));
+    }
+    ListarReservados();
+
+</script>

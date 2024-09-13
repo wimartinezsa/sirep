@@ -1,0 +1,75 @@
+.content_form_unidades{
+    display: grid;
+    gap: 15px;
+    padding: 12px;
+    grid-template: "nombre  dir " auto
+                   "tittlesede tittlepersencar " 20px
+                   "sede personaunidad " auto
+                   "tittleEstado tittleEstado " 20px
+                   "estado estado " auto
+                   "boton boton" 50px/ 1fr 1fr;
+}
+#id_vent{
+    display: none;
+}
+.word_file{
+    text-align: center;
+    cursor: pointer;
+}
+.namefileup{
+    margin-top: 15px;
+}
+h2, label{
+    color: rgb(93, 93, 93);
+}
+h2{
+    padding: .6em;
+    font-size: .9em;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+}
+
+.estadoPunt{
+    grid-area: estado;
+}
+.identificador{
+    grid-area: ident;
+}
+.codigounidad{
+    grid-area: nombre;
+}
+.nombreunidad{
+    grid-area: dir;
+}
+
+.descripcionunidad{
+    grid: descripcion;
+}
+.label_sede{
+    grid-area: tittlesede;
+}
+.label_estado{
+    grid-area: tittleEstado;
+}
+.sedeunidad{
+    grid-area: sede;
+}
+.label_persEncar{
+    grid-area: tittlepersencar;
+}
+.label_sede, .label_persEncar,.label_estado, .boton_registro{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+    font-size: 1.1em;
+}
+.personaunidad{
+    grid-area: personaunidad;
+}
+.boton_registro{
+    background-color: rgb(83, 159, 20);
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    grid-area: boton;
+}

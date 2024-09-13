@@ -1,0 +1,177 @@
+<div id="wrapper-menu"></div>
+<div class="limiter-width-page">
+    <div class="header-page">
+        <div class="header-logo"><img src="img/logos/logoSena.png"></div>
+        <div class="right-logo"><img src="img/logos/centro_user.png"></div>
+        <div class="empresa-logo"><img src="img/logos/logoSirep.png"></div>
+    </div>
+</div>
+<div class="limiter-width-page">
+    <header>
+        <!-- NAVBAR OCULTABLE -->
+        <nav id="main-navbar">
+            <div class="content-button-close">
+                <span class="open-close btn-close-2 icon-cross"></span>
+            </div>
+            <span class="content-rol">
+                <%=profile.Rol %> 
+
+                
+
+                <%if (profile.Rol == 'Lider UP' ) {%>
+                    <%if(profile.up_nombre) { %> 
+                        - <%=profile.up_nombre %>
+                    <% } else { %> 
+                        - No asignado
+                    <% } %> 
+                <%} %> 
+                <%if (profile.Rol == 'Punto Venta') {%>
+                    <%if(profile.pv_nombre) { %> 
+                        - <%=profile.pv_nombre %>
+                    <% } else { %> 
+                        - No asignado
+                    <% } %> 
+                <%} %> 
+            </span>
+            <ul>
+                <li><a href="/admin"><span class="icon-home"></span>Inicio</a></li>
+                <%if (profile.Rol.trim() == 'Admin' || profile.Rol == 'Punto Venta' && profile.pv_nombre) { %>
+                <li><a href="/registro-clientes"><span class="icon-suitcase"></span>Admin Usuarios</a></li>
+                <%} %> 
+                <%if (profile.Rol.trim() == 'Admin') { %>
+                <li><a href="/unidades-productivas"><span class="icon-suitcase"></span>Admin Unidades Productivas</a></li>
+                <li><a href="/punto-venta"><span class="icon-suitcase"></span>Admin Puntos de Venta</a></li>
+                <li><a href="/productos"><span class="icon-suitcase"></span>Admin Productos</a></li>
+                <li><a href="/produccionAdmin"><span class="icon-suitcase"></span>Admin Producción</a></li>
+                <li><a href="/dar-baja"><span class="icon-suitcase"></span>Autoconsumo / Baja</a></li>
+               <%} %> 
+
+
+                <%if (profile.Rol == 'Produccion') { %>
+                    <li><a href="/produccionConfirmar"><span class="icon-suitcase"></span>Admin Producción</a></li>
+                    <li><a href="/anuncios"><span class="icon-suitcase"></span>Anuncios</a></li>
+                    <%} %> 
+
+
+
+
+
+                <%if (profile.Rol == 'Lider UP' && profile.up_nombre) { %>
+                    <li><a href="/produccionUp"><span class="icon-suitcase"></span>Admin. Producción</a></li>
+                    <li><a href="/entregar-producto"><span class="icon-suitcase"></span>Entregar Producto</a></li>
+                                   
+                    <%if (profile.up_nombre=='Gastronomía') { %>
+                                <li><a href="/calendario-entrega"><span class="icon-suitcase"></span>Calendario de Entregas</a></li>
+                        <%} %>
+                    <%} %>
+
+                   
+
+                <%if (profile.Rol == 'Punto Venta' && profile.pv_nombre) { %>
+                <li><a href="/venta"><span class="icon-suitcase"></span>Facturar</a></li>
+                <li><a href="/calendario-facturas"><span class="icon-suitcase"></span>Calendario Facturas</a></li>
+                <%} %> 
+
+
+                <%if (profile.Rol.trim() == 'Admin' || 
+                (profile.Rol == 'Lider UP' && profile.up_nombre) || 
+                (profile.Rol == 'Punto Venta' && profile.pv_nombre) ||
+                (profile.Rol == 'Produccion') ) { %>
+                <li class="submenu"><a href="#">Reportes <span class="icon-cheveron-down"></span></a>
+                    <ul class="children">
+
+                        <%if (profile.Rol.trim() == 'Admin') { %>
+                      <!--  <li><a href="/rep_admin">Ventas por U.P<span class="icon-dot-single"></span></a></li> --> 
+                      <li><a href="/reporteHistorialProduccionUP">Historial Producción<span class="icon-dot-single"></span></a></li>
+                        <li><a href="/ProduccionProductos">Cantidad Producción<span class="icon-dot-single"></span></a></li>
+                       
+                      
+                        <li><a href="/rep_val_admi">Ventas por Producto<span class="icon-dot-single"></span></a></li>
+                        <li><a href="/Reporcanti">Ventas por Producto P.V<span class="icon-dot-single"></span></a></li>
+                        
+                        <!--  <li><a href="/reporDPV">Stock Productos Disponibles<span class="icon-dot-single"></span></a></li>--> 
+                        
+                        <!-- <li><a href="/rep_produccion_admi">Total Por Distribuir U.P<span class="icon-dot-single"></span></a></li>--> 
+                        
+                        <!-- <li><a href="/reporVent">Total Venta P.V<span class="icon-dot-single"></span></a></li>--> 
+
+
+                        <li><a href="/productos-de-baja">Productos dados de baja<span class="icon-dot-single"></span></a></li>
+                        <li><a href="/productos-autoconsumo">Productos de autoconsumo<span class="icon-dot-single"></span></a></li>
+                        <%}  %> 
+                        <%if (profile.Rol == 'Lider UP') { %>
+                        <li><a href="/reporteHistorialProduccionUP">Historial Producción<span class="icon-dot-single"></span></a></li>
+                        <li><a href="/ProduccionProductos">Cantidad Producción<span class="icon-dot-single"></span></a></li>
+                       
+                       
+                        <!-- <li><a href="/productos-facturados">Productos Facturado<span class="icon-dot-single"></span></a></li>-->
+                        <% } %> 
+
+                        <%if (profile.Rol == 'Punto Venta') { %>
+                        <li><a href="/Reporte_Pvent">Ventas Generales<span class="icon-dot-single"></span></a></li>
+                        <li><a href="/producto-cargo">Venta Producto - Cargo<span class="icon-dot-single"></span></a></li>
+                        <li><a href="/reporte-historial-reservas">Historial de Clientes<span class="icon-dot-single"></span></a></li>
+                        <li><a href="/productos-reservados">Productos Reservados<span class="icon-dot-single"></span></a></li>
+                        <%} %>
+
+                        <%if (profile.Rol == 'Produccion') { %>
+                        <li><a href="/reporteHistorialProduccionUP">Historial Producción<span class="icon-dot-single"></span></a></li>
+                        <li><a href="/ProduccionProductos">Cantidad Producción<span class="icon-dot-single"></span></a></li>
+                       
+                        <%} %>
+
+
+
+                    </ul>
+                </li>
+                <%} %>
+                <li><a href="/manuales"><span class="icon-suitcase"></span>Ayuda</a></li>
+            </ul>
+        </nav>
+        <!-- MENU DE USUARIO - SESSIÓN -->
+        <div class="menu-visible">
+            <div class="menu_bar open-close">
+                <a href="#e" class="bt-menu" id="btn-menu">
+                    <div class="icon-align"><span class="icon-menu1 icono-menu"></span></div>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" id="profile"><%=profile.Nombres%> </a></li>
+                    <li><a href="#" id="menu_reserva">
+                        <div class="reserva-lista">
+                            <span class="icon-store-front"></span>
+                            <span id="num-reserva"></span>
+                        </div></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="lista-reserva-box" id="lista-reserva-box">
+            <input type="hidden" id="rol_user" value="<%=profile.Rol%>">
+            <input type="hidden" id='id_movimiento_header'>
+            <input type="hidden" id="tipo_res">
+            <input type="hidden" id="ficha">
+            <input type="hidden" id="ident" value="<%=profile.identificacion%>">
+            <div class="reserva-section"><b>Historial de Compras</b> </div>
+            <div class="reserva-body" id="reserva-body"></div>
+            <div class="reserva-section" id="reserva-total"></div>
+        </div>
+        <div class="profile-box" id="profile-box">
+            <div class="profile-section">
+                <div class="user-name"><%=profile.Nombres%> </div>
+                <div class="user-rol"><%=profile.Cargo %> </div>
+                <a href="perfil">
+                    <div class="admin-profile">
+                        Administrar Perfíl
+                    </div>
+                </a>
+            </div>
+            <div class="profile-section">
+                <div class="logout-profile" id="logout">
+                    Cerrar Sesión
+                </div>
+            </div>
+        </div>
+    </header>
+</div>

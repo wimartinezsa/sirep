@@ -1,0 +1,70 @@
+.content_data{
+    background: #fff;
+    width: 100%;
+	display: inline-flex;
+    margin: 10px 0;
+}
+.content_data .input-data {
+	height: 40px;
+	width: 100%;
+	position: relative;
+}
+.content_data .input-data input {
+	height: 100%;
+	width: 100%;
+	border: none;
+	font-size: 17px;
+	border-bottom: 2px solid silver;
+}
+.input-data input:focus ~ label,
+.input-data input:valid ~ label {
+	transform: translateY(-25px);
+	font-size: 15px;
+}
+.content_data .input-data label {
+	position: absolute;
+	bottom: 10px;
+	left: 0;
+	color: grey;
+	pointer-events: none;
+	transition: all 0.3s ease;
+}
+.input-data .underline {
+	position: absolute;
+	height: 2px;
+	width: 100%;
+	bottom: 0;
+}
+.input-data .underline:before {
+	position: absolute;
+	content: '';
+	height: 100%;
+	width: 100%;
+	transform: scaleX(0);
+	transform-origin: center;
+	transition: transform 0.3s ease;
+}
+.input-data input:focus ~ .underline:before,
+.input-data input:valid ~ .underline:before {
+	transform: scaleX(1);
+}
+.form-control{
+    display: block;
+    width: 100%;
+    padding: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color: grey;
+    font-size: 1rem;
+}
+.form-control:hover{
+    box-shadow: 0;
+}
+.design-1{
+    border-right: 1px solid silver;
+    border-left: 1px solid silver;
+    border-bottom: 1px solid silver;
+}
+select.form-control{
+    border: none;
+}

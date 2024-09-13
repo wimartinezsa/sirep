@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <link rel="stylesheet" href="css/richtext.min.css">    
+    <link rel="stylesheet" href="css/font-awesome.min.css">    
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+    </div>
+    <div class="main-contenedor">
+        <section class="body-info-section">
+            <div class="contnet-section-info" style="min-height: 50vh;">
+                <div class="full-container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h1 class="h-title">Administrar Anuncios</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn-new" onclick="showModalAnuncio()">
+                                <i class="icon-date-add"></i>
+                                Nuevo Anuncio
+                            </a>
+                        </div>
+                    </div>
+                    <hr class="separador-text">
+                    <div id="prueba"></div>
+                    <table class="table table-bordered" id="table-anuncios">
+                        <thead>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Hora Inicio</th>
+                            <th>Hora Fin</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="modal fade" id="modalAnuncio" tabindex="-1" aria-labelledby="header-anuncio-modal" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="header-anuncio-modal">Registrar anuncio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="titulo_anuncio">Título</label>
+                            <input class="form-control" type="text" id="titulo_anuncio">
+                        </div>
+                        <div class="col-md-12">
+                            <label for="titulo_anuncio">Contenido</label>
+                            <div id="contenedorAnuncio">
+                                <input class="form-control" type="text" id="contenido_anuncio">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label for="fecha_inicio">Fecha de inicio</label>
+                            <input type="date" class="form-control" id="fecha_inicio">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="fecha_fin">Fecha de fin</label>
+                            <input type="date" class="form-control" id="fecha_fin">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label for="hora_inicio">Hora de Inicio</label>
+                            <input type="time" class="form-control" id="hora_inicio">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="hora_fin">Hora de Fin</label>
+                            <input type="time" class="form-control" id="hora_fin">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col">
+                            <label for="estado">Estado</label>
+                            <select id="estado" class="form-select">
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" id="footer-anuncio-modal">
+                    <button type="button" class="btn btn-primary" onclick="registrarAnuncio();">
+                        Registrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('../partials/footer'); %>
+    <%- include('../partials/scripts.ejs') %> 
+    <script src="js/libraries/jquery.richtext.min.js"></script>
+    <script>
+        let anuncios = [];
+        let anuncio = {};
+        let headerModal = document.getElementById('header-anuncio-modal');
+        let footerModal = document.getElementById('footer-anuncio-modal');
+        var modalAnuncio = new bootstrap.Modal(document.getElementById('modalAnuncio'), { keyboard: false });
+        function showModalAnuncio(){
+            headerModal.innerHTML = 'Registrar Anuncio';
+            footerModal.innerHTML = '<button type="button" class="btn btn-primary" onclick="registrarAnuncio();">Registrar</button>'
+            document.getElementById('contenedorAnuncio').innerHTML =  `<input class="form-control" type="text" id="contenido_anuncio">`;
+            
+            document.getElementById('titulo_anuncio').value = '';
+            document.getElementById('fecha_inicio').value = '';
+            document.getElementById('fecha_fin').value = '';
+            document.getElementById('hora_inicio').value = '';
+            document.getElementById('hora_fin').value = '';
+            $('#contenido_anuncio').richText();
+            modalAnuncio.show()
+        };
+
+        function registrarAnuncio(){
+            let titulo = document.getElementById('titulo_anuncio').value;
+            let contenido = document.getElementById('contenido_anuncio').value;
+            let fecha_inicio = document.getElementById('fecha_inicio').value;
+            let fecha_fin = document.getElementById('fecha_fin').value;
+            let hora_inicio = document.getElementById('hora_inicio').value;
+            let hora_fin = document.getElementById('hora_fin').value;
+            
+            var datos = new URLSearchParams();
+            datos.append('titulo', titulo);
+            datos.append('contenido', contenido);
+            datos.append('fecha_inicio', fecha_inicio);
+            datos.append('fecha_fin', fecha_fin);
+            datos.append('hora_inicio', hora_inicio);
+            datos.append('hora_fin', hora_fin);
+            fetch('/crearAnuncio', {
+                method: 'POST',
+                body: datos,
+                headers: {'Authorization': 'Bearer '+token},
+            }).then(res => res.json())
+            .then(() => {
+                listarAnuncios();
+                modalAnuncio.hide();
+            })
+        }
+        
+        function actualizarAnuncio(){
+            let titulo = document.getElementById('titulo_anuncio').value;
+            let contenido = document.getElementById('contenido_anuncio').value;
+            let fecha_inicio = document.getElementById('fecha_inicio').value;
+            let fecha_fin = document.getElementById('fecha_fin').value;
+            let hora_inicio = document.getElementById('hora_inicio').value;
+            let hora_fin = document.getElementById('hora_fin').value;
+            let estado = document.getElementById('estado').value;
+
+            var datos = new URLSearchParams();
+            datos.append('titulo', titulo);
+            datos.append('contenido', contenido);
+            datos.append('fecha_inicio', fecha_inicio);
+            datos.append('fecha_fin', fecha_fin);
+            datos.append('hora_inicio', hora_inicio);
+            datos.append('hora_fin', hora_fin);
+            datos.append('estado', estado);
+            
+            fetch('/actualizarAnuncio/'+this.anuncio.id_anuncio, {
+                method: 'POST',
+                body: datos,
+                headers: {'Authorization': 'Bearer '+token},
+            }).then(res => res.json())
+            .then((data) => {
+                launchAlert({icon: 'success', message: data.message});
+                listarAnuncios()
+                modalAnuncio.hide();
+            })
+
+        }
+        
+        function modalEditar(id){
+            fetch('/listarAnuncio/'+id, {
+                headers: {'Authorization': 'Bearer '+token},
+            }).then(res => res.json())
+            .then(data => {
+                this.anuncio = data;
+                document.getElementById('contenedorAnuncio').innerHTML =  `<input class="form-control" type="text" id="contenido_anuncio">`;
+                document.getElementById('titulo_anuncio').value = data.titulo;
+                document.getElementById('fecha_inicio').value = data.fecha_inicio.substring(0, 10);
+                document.getElementById('fecha_fin').value = data.fecha_fin.substring(0, 10);
+                document.getElementById('hora_inicio').value = data.hora_inicio;
+                document.getElementById('hora_fin').value = data.hora_fin;
+                document.getElementById('contenido_anuncio').value = data.contenido;
+                $('#contenido_anuncio').richText();
+
+                headerModal.innerHTML = 'Editar Anuncio';
+                footerModal.innerHTML = '<button type="button" class="btn btn-primary" onclick="actualizarAnuncio();">Actualizar</button>'
+
+                modalAnuncio.show();
+            });
+        }
+        function listarAnuncios(){
+            fetch('/listarAnuncios', {
+                method: 'POST',
+                headers: {'Authorization': 'Bearer '+token},
+            }).then(res => res.json())
+            .then(data => {
+                for (let i = 0; i < data.length; i++) {
+                    const element = data[i];
+                    let fecha_inicio = data[i].fecha_inicio.substring(0, 10);
+                    let fecha_fin = data[i].fecha_fin.substring(0, 10);
+                    let hora_inicio = formatHour(data[i].hora_inicio);
+                    let hora_fin = formatHour(data[i].hora_fin);
+                    data[i] = {
+                        ...data[i], 
+                        fecha_inicio,
+                        fecha_fin,
+                        hora_inicio,
+                        hora_fin,
+                        accion: `<button class="btn btn-secondary" onclick="modalEditar(${element.id_anuncio})">Editar</button>`
+                    }
+                }
+
+                $('#table-anuncios').DataTable({
+                    "autoWidth": false,
+                    "paging":true,
+                    "processing":true,
+                    "responsive":true,
+                    "destroy":true,
+                    "data":data,
+                    dom: 'Bfrtip',
+                    columns:[
+                        {"data": "id_anuncio"},
+                        {"data": "titulo"},
+                        {"data": "fecha_inicio"},
+                        {"data": "fecha_fin"},
+                        {"data": "hora_inicio"},
+                        {"data": "hora_fin"},
+                        {"data": "estado"},
+                        {"data": "accion"},
+                    ]
+                })
+            })
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            $('#contenido_anuncio').richText();
+            listarAnuncios();
+        });
+        </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+    "name": "produccion_2022",
+    "version": "2.0.0.0",
+    "description": "Proyecto de ADSI - IMPORTANTE LEER ESTE DOCUMENTO ANTES DE REALIZAR CAMBIOS Una vez creado el repositorio local, descargar este repositorio desde git bash con git pull desde su respectiva rama. Por ejemplo: El grupo 1 va a descargarlo asi:   git pull origin grupo1              El grupo 2 va a descargarlo asi:   git pull origin grupo2              El grupo 3 va a descargarlo asi:   git pull origin grupo3              El grupo 4 va a descargarlo asi:   git pull origin grupo4              El grupo 5 va a descargarlo asi:   git pull origin grupo5",
+    "main": "app.js",
+    "scripts": {
+        "dev": "nodemon app.sirep.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.1",
+        "ejs": "^3.1.6",
+        "express": "^4.17.3",
+        "express-session": "^1.17.3",
+        "jsonwebtoken": "^8.5.1",
+        "multer-js": "^1.4.3",
+        "mysql": "^2.18.1",
+        "nodemailer": "^6.8.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.15"
+    }
+}

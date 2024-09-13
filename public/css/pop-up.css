@@ -1,0 +1,139 @@
+.popup-wrapper {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: none;
+}
+ 
+.popup {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    max-width: 320px;
+    top: 30%;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    position: relative;
+	color: rgb(68, 128, 18);
+}
+ 
+.popup button {
+    padding: 5px 10px;
+    display: block;
+    height: 50px;
+    background: rgb(94, 179, 25);
+    color: white;
+    font-size: 1em;
+    font-family: 'Source Sans Pro';
+    line-height: 1.44em;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 3px #000;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+ 
+.popup button:hover {
+    opacity: 0.9;  
+    box-shadow: 0 0 10px rgb(109, 109, 109);
+}
+ 
+.popup-close {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+/* LABEL ANIM*/
+
+.wrapper-form-data {
+	background: #fff;
+	padding: 25px 10px 0px 10px;
+	display: inline-flex;
+}
+.wrapper-form-data .input-data {
+	height: 40px;
+	width: 100%;
+	position: relative;
+}
+.wrapper-form-data .input-data input {
+	height: 100%;
+	width: 100%;
+	border: none;
+	font-size: 17px;
+	border-bottom: 2px solid silver;
+}
+.input-data input:focus ~ label,
+.input-data input:valid ~ label {
+	transform: translateY(-25px);
+	font-size: 15px;
+}
+.wrapper-form-data .input-data label {
+	position: absolute;
+	bottom: 10px;
+	left: 0;
+	color: grey;
+	pointer-events: none;
+	transition: all 0.3s ease;
+}
+.input-data .underline {
+	position: absolute;
+	height: 2px;
+	width: 100%;
+	bottom: 0;
+}
+.input-data .underline:before {
+	position: absolute;
+	content: '';
+	height: 100%;
+	width: 100%;
+	transform: scaleX(0);
+	transform-origin: center;
+	transition: transform 0.3s ease;
+}
+.input-data input:focus ~ .underline:before,
+.input-data input:valid ~ .underline:before {
+	transform: scaleX(1);
+}
+
+.wrapper-long-form-data {
+	background: #fff;
+	padding: 30px;
+	display: flex;
+}
+.wrapper-long-form-data .input-data {
+	height: 40px;
+	width: 100%;
+	position: relative;
+	padding: 0 10px;
+}
+.wrapper-long-form-data .input-data textarea {
+	height: 100%;
+	font-size: 17px;
+	border: none;
+	border-left: 2px solid silver;
+	border-bottom: 2px solid silver;
+}
+.wrapper-long-form-data textarea:focus ~ label,
+.wrapper-long-form-data textarea:valid ~ label {
+	transform: translateY(-30px);
+	font-size: 15px;
+}
+.wrapper-long-form-data .input-data label {
+	position: absolute;
+	bottom: 10px;
+	left: 15px;
+	color: grey;
+	pointer-events: none;
+	transition: all 0.3s ease;
+}
+
+#usuario{
+    font-size: 1em;
+}

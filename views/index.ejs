@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); %>
+    <link rel="stylesheet" href="css/pop-up.css">
+    <title>SENA</title>
+</head>
+
+<body>
+    <div class="content-header">
+        <div class="limiter-width-page">
+            <div class="header-page">
+                <div class="header-logo"><img src="img/logos/logoSena.png"></div>
+                <div class="right-logo"><img src="img/logos/centro_user.png"></div>
+                <div class="empresa-logo"><img src="img/logos/logoSirep.png"></div>
+            </div>
+        </div>
+        <header>
+            <!-- MENU VISIBLE -->
+            <div class="menu-visible">
+                <button class="button-login" id="OpenLogin">
+                    Iniciar Sesión
+                </button>
+            </div>
+        </header>
+    </div>
+    <div class="main-contenedor">
+        <section class="element-section">
+            <div class="content-element-header-info">
+                <div id="corrousel-sena" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="./img/slider/DSC_2083.JPG" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="./img/slider/DSC_2169.JPG" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="./img/slider/DSC_2157.JPG" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="./img/slider/DSC_2102.JPG" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="./img/slider/DSC_2095.JPG" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="./img/slider/DSC_2373.JPG" class="d-block w-100" alt="...">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#corrousel-sena"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#corrousel-sena"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+            <div class="wabe" style="overflow: hidden">
+                <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%">
+                    <path d="M-0.33,91.08 C145.26,104.90 293.11,19.04 500.00,49.99 L500.00,150.00 L0.00,150.00 Z"
+                        style="stroke: none; fill: #fff"></path>
+                </svg>
+            </div>
+        </section>
+        <section class="body-info-section">
+            <div class="contnet-section-info">
+                <div class="full-container">
+                    <h1 class="h-title">Unidades Productivas</h1>
+                    <hr class="separador-text">
+                    <p class="body-text">Constituyen la base de la estrategia y son el componente esencial de la
+                        estrategia SENA Empresa, es la unidad mínima de dinamización de la misma al replicar en la
+                        mayoría de sus componentes la estructura de una empresa real.</p>
+                    <div class="lista row">
+                        <div class="col-md-3">
+                            <p><i class="icon-label_important"></i> Agrícola</p>
+                            <p><i class="icon-label_important"></i> Agroindustria</p>
+                            <p><i class="icon-label_important"></i> Gastronomía</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><i class="icon-label_important"></i> Pecuaria</p>
+                            <p><i class="icon-label_important"></i> Ambiental - Recursos Naturales</p>
+                            <p><i class="icon-label_important"></i> Empresa de Servicios Públicos</p>
+                        </div>
+                        <div class="col-md-5">
+                            <p><i class="icon-label_important"></i> Escuela Nacional de la Calidad del Café</p>
+                            <p><i class="icon-label_important"></i> Moda - Comercio y Servicios</p>
+                            <p><i class="icon-label_important"></i> Unidad Extena</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="body-info-section"></section>
+        <div class="popup-wrapper">
+            <div class="popup">
+                <div class="popup-close">x</div>
+                <div class="popup-content">
+                    <h3>Login</h3>
+                    <div class="wrapper-form-data">
+                        <div class="input-data">
+                            <input type="text" id='user' size="40" maxlength="50" required="">
+                            <div class="underline">
+                            </div>
+                            <label>Usuario</label>
+                        </div>
+                    </div>
+                    <div class="wrapper-form-data">
+                        <div class="input-data">
+                            <input type="password" id="password" size="40" maxlength="50" required="">
+                            <div class="underline"></div>
+                            <label>Contraseña</label>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <a href="/forgot-password">¿Olvidó su contraseña?</a>
+                    </div>
+                    <div id="error-message"></div>
+                    <button class="w-100 mt-3" id="btnSession">Iniciar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('./partials/footer'); %>
+</body>
+
+</html>
+<script src="js/libraries/bootstrap.min.js"></script>
+<script src="js/libraries/jquery-3.2.1.js"></script>
+<script src="js/pop-up.js"></script>
+<script>
+    var myCarousel = document.querySelector('#corrousel-sena')
+    var carousel = new bootstrap.Carousel(myCarousel, {
+        interval: 5000,
+    })
+    let btnSession = document.getElementById("btnSession");
+    btnSession.addEventListener("click", () => {
+        let user = document.getElementById("user").value;
+        let password = document.getElementById("password").value;
+        let validate = { user, password }
+        let up = document.getElementById("select-up");
+        let pv = document.getElementById("select-pv");
+        /* SE OBTIENEN LOS PARAMETROS */
+        let datos = new URLSearchParams();
+        datos.append('user', user);
+        datos.append('password', password);
+
+        if (up) datos.append('up', up.value);
+        if (pv) datos.append('pv', pv.value);
+
+        if (!validateFields(validate)) return;
+        fetch('/auth/login', {
+            method: 'POST',
+            body: datos
+        }).then(data => { return data.json() })
+        .then(res => {
+            if (res.status == 'errorIn') return createErrorMessage('El usuario se encuentra inactivo');
+            if (res.status == 'error') return createErrorMessage('Usuario o contraseña incorrecta');
+            if (res.status == 'error_up') return createSelectUP(res);
+            if (res.status == 'error_pv') return createSelectPV(res);
+            localStorage.setItem('token', res.token)
+            localStorage.removeItem('modal-mostrado');
+            window.location.href = "admin";
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    })
+    function validateFields(data) {
+        if (!data.user) {
+            return user.focus();
+        }
+        if (!data.password) {
+            return password.focus();
+        }
+        return true;
+    }
+    function createErrorMessage(message) {
+        let errorDiv = document.getElementById('error-message');
+        let paddingDiv = document.createElement('div');
+        let dangerSpan = document.createElement('span');
+        let errorMSG = document.createTextNode(message);
+
+        dangerSpan.setAttribute('class', 'danger-span')
+        dangerSpan.appendChild(errorMSG);
+
+        paddingDiv.appendChild(dangerSpan);
+        paddingDiv.setAttribute('class', 'padding-wrapper')
+        paddingDiv.setAttribute('id', 'wrong-data');
+
+        errorDiv.innerHTML = '';
+        errorDiv.appendChild(paddingDiv);
+    }
+    function createSelectPV(data) {
+        let errorDiv = document.getElementById('error-message');
+        let paddingDiv = document.createElement('div');
+        let dangerSpan = document.createElement('span');
+        let errorMSG = document.createTextNode('Selecciona el PV a administrar')
+        let select = document.createElement('select');
+        data.data.forEach(element => {
+            let option = document.createElement('option');
+            option.setAttribute('value', element.Id_punto_vent);
+            option.appendChild(document.createTextNode(element.Nombre))
+            select.appendChild(option);
+        });
+        select.setAttribute('id', 'select-pv')
+        select.setAttribute('class', 'mt-1 form-select');
+
+        dangerSpan.setAttribute('class', 'danger-span')
+        dangerSpan.appendChild(errorMSG);
+
+        paddingDiv.appendChild(dangerSpan);
+        paddingDiv.appendChild(select);
+        paddingDiv.setAttribute('class', 'padding-wrapper')
+        paddingDiv.setAttribute('id', 'wrong-data');
+
+        errorDiv.innerHTML = '';
+        errorDiv.appendChild(paddingDiv);
+    }
+    function createSelectUP(data) {
+        console.log(data)
+        let errorDiv = document.getElementById('error-message');
+        let paddingDiv = document.createElement('div');
+        let dangerSpan = document.createElement('span');
+        let errorMSG = document.createTextNode('Selecciona la UP a administrar')
+        let select = document.createElement('select');
+        data.data.forEach(element => {
+            let option = document.createElement('option');
+            option.setAttribute('value', element.codigo_up);
+            option.appendChild(document.createTextNode(element.Nombre))
+            select.appendChild(option);
+        });
+        select.setAttribute('id', 'select-up')
+        select.setAttribute('class', 'mt-1 form-select');
+
+        dangerSpan.setAttribute('class', 'danger-span')
+        dangerSpan.appendChild(errorMSG);
+
+        paddingDiv.appendChild(dangerSpan);
+        paddingDiv.appendChild(select);
+        paddingDiv.setAttribute('class', 'padding-wrapper')
+        paddingDiv.setAttribute('id', 'wrong-data');
+
+        errorDiv.innerHTML = '';
+        errorDiv.appendChild(paddingDiv);
+    }
+</script>

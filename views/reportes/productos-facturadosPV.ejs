@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <link rel="stylesheet" href="css/tabla.listas.css">
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+    </div>
+    <div class="main-contenedor">
+        <div class="body-info-section">
+            <div class="full-container">
+                <div class="breadcrumb">
+                   
+                </div>
+                <div class="table-admin mt-1">
+                    <h1 class="h-title">Ventas del Periodo</h1>
+                    <form id="form-comparar-tiempo" class="mb-3">
+                        <div class="row">
+                            <div class="form-group col-4">
+                                <label for="formGroupExampleInput">Fecha Inicio</label>
+                                <input type="date" class="form-control" id="date-start">
+                            </div>
+                            <div class="form-group col-4">
+                                <label for="formGroupExampleInput">Fecha Fin</label>
+                                <input type="date" class="form-control" id="date-end">
+                            </div>
+                            <div class="form-group col-4">
+                                <button class="btn btn-primary w-100 mt-4" type="button" onclick="Buscar_Reporte_UP();">Buscar</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="table-admin mt-1">
+                        <table id="reporte_pvent"  class="table-info">
+                            <thead>                       
+                                <th>Nombre del producto</th>
+                                <th>cantidad Vendida</th>
+                                <th>Valor</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Fin</th>
+                            </thead>
+                            <tbody>
+                               
+                            </tbody>
+                      </table>                    
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <%- include('../partials/footer') %>
+    <%- include('../partials/scripts.ejs') %> 
+    <%- include('../partials/report-scripts.ejs') %> 
+</body>
+</html>
+<script src="js/catch.reporte.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        Buscar_Reporte_UP();
+    });
+</script>

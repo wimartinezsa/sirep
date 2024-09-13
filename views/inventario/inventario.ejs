@@ -1,0 +1,175 @@
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <link rel="stylesheet" href="css/tabla.listas.css">
+    <link rel="stylesheet" href="css/style.input.css">
+    <link rel="stylesheet" href="css/form.inventario.css">
+
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+    </div>
+    <div class="main-contenedor">
+        <div class="body-info-section">
+            <div class="full-container">
+                <div class="breadcrumb">
+                    <a href="/admin" class="go-home">Volver al inicio</a>  | <a href="#">Inventario</a>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <h1 class="h-title">Asignar Productos a los puntos de Venta</h1>
+                    </div>
+                    <div class="col-md-4"><a id="Openform" class="btn-new"><i class="icon-library_add"></i> Nuevo Inventario</a></div>
+                </div>
+                    
+                    <div class="table-admin mt-1">
+                        <table id="tabla-inventario" class="table mt-3" style="width:100%;">
+                            <thead>
+                                <tr class="line-head">
+                                    <th>Id Inventario</th>
+                                    <th>Punto de Venta</th>
+                                    <th>Producto</th>
+                                    <th>Stock</th>
+                                    <th>Admin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="content-form-subject">
+                    <div class="content-main-form-subject">
+                        <h1 class="h-title">Agregar Productos al Punto de Venta</h1><div class="popup-close-window">x</div>
+                        <form class="content_form_inventario">
+                            <label class="label_producto">Producto</label>
+                            <div class="content_data content_producto design-1">
+                                <select id="fkproducto" class="form-control">
+                                    <option selected disabled >Seleccionar...</option>
+                                    <% for(var i=0; i<Productos.length;i++){%>
+                                        <option value="<%=Productos[i].Codigo_pdto%>"><%=Productos[i].Nombre%> </option>
+                                        <%  }
+                                        %>
+                                </select>
+                            </div>
+                            <label class="label_puntventa">Punto de Venta</label>
+                            <div class="content_data content_puntventa design-1">
+                                <select id="fkpuntventa" class="form-control">
+                                    <option selected disabled >Seleccionar...</option>
+                                    <% for(var i=0; i<PVenta.length;i++){%>
+                                        <option value="<%=PVenta[i].Id_punto_vent%>"><%=PVenta[i].Nombre%> </option>
+                                        <%  }
+                                        %>
+                                </select>
+                            </div>
+                            <button type="button" class="boton_registro" onclick="RegistrarInventario();">Registrar</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- MODAL -->
+                <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Actualizar Inventario <input type="text"  size="5" id="id_pdto_inventario" disabled><input type="text"  size="5" id="id_invetario" disabled></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="form-actual-invent">
+                                    <div class="row">
+                                        <div class="form-floating mb-3 col-3 ">
+                                            <input type="text" class="form-control " id="Productoact" disabled>
+                                            <label for="floatingInput">Producto</label>
+                                        </div>
+                                        <div class="form-floating mb-3 col-3">
+                                            <input type="text" class="form-control" id="Puntoact" disabled>
+                                            <label for="floatingInput">Punto de Venta</label>
+                                        </div>
+                                        <div class="form-floating mb-3 col-3">
+                                            <input type="number" class="form-control  cantidad-invent" id="Stockact">
+                                            <label for="floatingInput" >Cantidad Distribuir</label>
+                                        </div>
+                                        <div class="form-floating mb-3 col-3">
+                                            <input type="number" class="form-control" id="produccionact" disabled>
+                                            <label for="floatingInput">Id Produccion</label>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="row">
+                                    <div class="form-floating mb-3 col-9">
+
+                                    </div>
+                                    <div class="form-floating mb-3 col-3">
+                                        <button class="btn btnact btn-lg" type="button" onclick="Actualizarinventario();">Actualizar</button>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h4>Lista de Produccion del Producto</h4>
+                                            <table id="tablaproduccion" class="table" style="width:100%;">
+                                                <thead>
+                                                    <tr class="line-produccion">
+                                                        <th>Id Produccion</th>
+                                                        <th>Producto</th>
+                                                        <th>Stock Producido </th>
+                                                        <th>Distribuido</th>
+                                                        <th>Disponible</th>
+                                                        <th>Fecha</th>
+                                                        <th>Observar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                <!--  -->
+                <!-- MODAL -->
+                <div class="modal fade" id="mysmodalbodega" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Distribucion de <label  id="idnombreproducto" ></label></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <table id="tablabodega" class="table" style="width:100%;">
+                                                <thead>
+                                                    <tr class="line-bodega">
+                                                        <th>Id</th>
+                                                        <th>Punto de Venta</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Fecha</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                <!--  -->
+            </div> 
+        </div>
+    </div>
+    <%- include('../partials/footer') %>
+    <%- include('../partials/scripts.ejs') %> 
+</body>
+</html>
+<script src="js/pop-up-forms.js"></script>
+<script src="js/catch.inventario.js"></script>

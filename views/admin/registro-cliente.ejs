@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head'); %>
+    <title>Administrar Clientes</title>
+    <link rel="stylesheet" href="css/modulo-venta.css">
+    <link rel="stylesheet" href="css/registro-clientes.css">
+    <style>.dt-buttons{float: left;}</style>
+</head>
+
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %>
+    </div>
+    <div class="main-contenedor">
+      <div class="body-info-section">
+        <div class="box">
+            <div class="breadcrumb">
+                <a href="/admin" class="go-home">Volver al inicio </a>  | <a href="#">Usuarios</a>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <h1 class="h-title">Administrar Usuarios</h1>
+              </div>
+              <div class="col-sm-6" 
+              style="display: flex; justify-content: flex-end; align-items: flex-start;">
+                <%if (profile.Rol.trim() == 'Admin') { %>
+                <a class="btn-new" 
+                style="margin-right: 10px";
+                onclick="showModalMigrar()">
+                  <i class="icon-file-excel-o"></i>
+                  Migrar Usuarios
+                </a>
+                <% } %>
+                <a class="btn-new" id="btn" onclick="registroCliente()">
+                  <i class='icon-user2'></i>Nuevo Usuario
+                </a>
+              </div>
+            </div>
+            <!-- ========Tabla Migración=========== -->
+            <div>
+                <table id="usuario" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Identificación</th>
+                            <th scope="col">Nombres</th>
+                            <th scope="col">Correo</th>
+                            <th scope="col">Direccion</th>
+                            <th scope="col">Telefono</th>
+                            <th scope="col">Cargo</th>
+                            <th scope="col">Rol</th>
+                            <th scope="col">Ficha</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Admin</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpo-tabla">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+      <!-- =========================Modal migrar clientes -->
+      <div class="modal fade" id="modalMigrar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Cargar EXCEL</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-6"><label for="excelInnpt" class="form-label">Seleccionar archivo</label></div>
+                      <div class="col-6">
+                        <a class="download-format" href="/formatos/Formato_UsuariosSIREP.xlsx">
+                          Descargar Formato
+                          <i class="icon-cloud-download1"></i>
+                        </a>
+                        </div>
+                      <div class="col-md-12">
+                        <div class="mb-3">
+                          <input class="form-control" type="file" id="excelInnpt" accept=".xlsx, .xls"
+                          onchange="loadUsersXSLX()">
+                        </div>
+                      </div>
+                      <div class="col-md-12" id="migracion-div" style="display: none;">
+                        <table id="migracion" class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th>Identificación</th>
+                              <th>Nombres</th>
+                              <th>Correo</th>
+                              <th>Telefono</th>
+                              <th>Ficha</th>
+                              <th>Cargo</th>
+                              <th>Rol</th>
+                              <th>Sede</th>
+                            </tr>
+                          </thead>
+                          <tbody></tbody>
+                        </table>
+                      </div>
+                      <div class="col-md-12" id="info-div"></div>
+                    </div>
+                  </div>
+                  <div class="modal-footer" id="footer-regiter-modal" style="display: none;">
+                      <button type="button" class="btn btn-primary" onclick="registerData();">Registrar</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- =========================Modal registro usuario -->
+      <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Registro de Usuario</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <!--===================formulario=======================-->
+                    <form>
+                      <div class="row mt-1">
+                        <div class="col">
+                          <label for="iden">Identificación</label>
+                          <input type="number" id="iden"  class="form-control">
+                        </div>
+                        <div class="col">
+                          <label for="nomb">Nombres</label>
+                          <input type="text" id="nomb"  class="form-control">
+                        </div>
+                      </div>
+
+                      <div class="row mt-2">
+                        <div class="col">
+                          <label for="corr">Correo</label>
+                          <input type="email" id="corr"  class="form-control">
+                        </div>
+                        <div class="col">
+                          <label for="direc">Dirección</label>
+                          <input type="text" id="direc"  class="form-control">
+                        </div>
+                      </div>
+
+                      <div class="row mt-2">
+                        <div class="col">
+                          <label for="tele">Teléfono</label>
+                          <input type="number" id="tele"  class="form-control">
+                        </div>
+                        <div class="col" id="Div_ID" style="display: none;">
+                          <label for="ID">ID Ficha</label>
+                          <input type="number" id="ID"  class="form-control">
+                        </div>
+                      </div>
+
+                      <div class="row mt-2">
+                        <div class="col">
+                          <label for="cargo">Cargo</label>
+                          <select id="cargo" class="form-select" aria-label="Default select example">
+                            <option selected>Seleccione el cargo</option>
+                            <% for (let u = 0; u < Datos.length; u++) { %>
+                            <option value="<%=Datos[u].idcargo %>">
+                              <%=Datos[u].nombre_cargo %>
+                            </option>
+                            <% } %>
+                          </select>
+                        </div>
+                        <div  class="col">
+                          <label for="rol">Rol</label>
+                          <select id="rol" class="form-select" aria-label="Default select example">
+                            <option selected>Seleccione el rol para acceso al sistema</option>
+                            <option value="Invitado">Invitado</option>
+                            <option value="Vocero">Vocero</option>
+                            <option value="Lider UP">Lider UP</option>
+                            <option value="Punto Venta">Punto Venta</option>
+                            
+                          </select>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <label for="sede">Sede</label>
+                          <select id="sede" class="form-select" aria-label="Default select example">
+                            <option value="Yamboro">Yamboró</option>
+                            <option value="Centro">Centro</option>
+                          </select>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-primary" onclick="registrarUsuario();">Registrar</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+        <!-- ===============================Modal Actualizar clientes -->
+      <div class="modal fade" id="modalActualizar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Actualizar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <!--===================formulario=======================-->
+                  <form>
+                    <input type="hidden" id="idenR">
+                    <div class="row">
+                      <div class="col mt-1">
+                        <label for="new_iden">Identificación</label>
+                        <input type="number" id="new_iden"  class="form-control">
+                      </div>
+                      <div class="col">
+                        <label for="nombR">Nombres</label>
+                        <input type="text" id="nombR"  class="form-control">
+                      </div>
+                    </div>
+
+                    <div class="row mt-2 ">
+                      <div class="col">
+                        <label for="corrR">Correo</label>
+                        <input type="email" id="corrR"  class="form-control">
+                      </div>
+                      <div class="col">
+                        <label for="direcR">Dirección</label>
+                        <input type="text" id="direcR"  class="form-control">
+                      </div>
+                    </div>
+                                          
+                    <div class="row mt-2">
+                      <div class="col">
+                        <label for="telR">Teléfono</label>
+                        <input type="number" id="telR"  class="form-control">
+                      </div>
+                      <div class="col" id="Div_idR" style="display: none;">
+                        <label for="idR">ID Ficha</label>
+                        <input type="number" id="idR"  class="form-control">
+                      </div>
+                    </div>
+                    <div class="row mt-2">
+                      <div class="col">
+                        <label for="cargoR">Cargo</label>
+                        <select id="cargoR" class="form-select" aria-label="Default select example">
+                          <% for (let u = 0; u < Datos.length; u++) {%>
+                          <option value="<%=Datos[u].idcargo %>">
+                            <%=Datos[u].nombre_cargo %>
+                          </option>
+                          <% } %>
+                          
+                        </select>
+                      </div>
+                      <div  class="col">
+                        <label for="rolR">Rol</label>
+                        <select id="rolR" class="form-select" aria-label="Default select example">
+                          <option value="Invitado">Invitado</option>
+                          <option value="Vocero">Vocero</option>
+                          <option value="Lider UP">Lider UP</option>
+                          <option value="Punto Venta">Punto Venta</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <label for="sedeR">Sede</label>
+                        <select id="sedeR" class="form-select" aria-label="Default select example">
+                          <option value="Yamboro">Yamboró</option>
+                          <option value="Centro">Centro</option>
+                        </select>
+                      </div>
+                      <div  class="col">
+                        <label for="estado">Estado</label>
+                        <select id="estado" class="form-select" aria-label="Default select example">
+                          <option class="activo" value="1">Activo</option>
+                          <option class="inactivo" value="0">Inactivo</option>
+                        </select>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn link-actualizar" onclick="actualizarRegistro();">Actualizar</button>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+    <%- include('../partials/scripts.ejs') %>
+    <%- include('../partials/report-scripts.ejs') %> 
+    <script src="js/libraries/read-excel-file.min.js"></script>
+    <script src="js/catch.registro-clientes.js"></script>
+</body>
+
+</html>
+
+<script>
+  var usuarios_migrados = [];
+  var success_jobs = [];
+  var failed_jobs = [];
+  var modalMigrar = new bootstrap.Modal(document.getElementById('modalMigrar'), { keyboard: false });
+  function showModalMigrar(){modalMigrar.show()}
+  /* =====CARGA LOS ARCHIVOS DEL EXCEL */
+  async function loadUsersXSLX(){
+    document.getElementById('info-div').innerHTML = '';
+    let excelInput = document.getElementById('excelInnpt');
+    this.success_jobs = [];
+    this.failed_jobs = [];
+    if(!excelInput.files[0]) return;
+    let content = await readXlsxFile(excelInput.files[0]); 
+    let new_array = [];
+
+    for (let i = 0; i < content.length; i++) {
+      if(i!=0){
+        const element = content[i];
+        new_array.push(element);
+      }
+    }
+    this.usuarios_migrados = new_array;
+    document.getElementById('migracion-div').setAttribute('style', 'display: block;');
+    document.getElementById('footer-regiter-modal').setAttribute('style', 'display:flex;');
+    $('#migracion').DataTable({
+      lengthChange: false,
+      autoWidth: false,
+      destroy: true,
+      responsive: true,
+      data: new_array,
+      columns: [
+          {"data": 0},
+          {"data": 1},
+          {"data": 2},
+          {"data": 3},
+          {"data": 4},
+          {"data": 5},
+          {"data": 6},
+          {"data": 7},
+      ]
+    });
+  }
+  /* =====CARGA LOS USUARIOS DEL EXCEL */
+  function registerData(){
+    this.success_jobs = [];
+    this.failed_jobs = [];
+    document.getElementById('footer-regiter-modal').setAttribute('style', 'display:none');
+    document.getElementById('migracion-div').setAttribute('style', 'display: none;');
+    let infoDiv = document.getElementById('info-div');
+    infoDiv.innerHTML = `
+    <div style="display: flex; justify-content: center;">
+      <div class="lds-ring" ><div></div><div></div><div></div><div></div></div>
+    </div>
+    <div class="fs-3">
+      <center><span id="load-user">0</span> / <span id="users-to-load"></span></center>
+    </div>`;
+    document.getElementById('users-to-load').innerHTML = this.usuarios_migrados.length;
+    /* ======CARGA UN USUARIO CADA 200 mls====== */
+    let i = 0;
+    let timerId = setInterval(() => {
+      loadUser(this.usuarios_migrados[i]);
+      i++;
+      if(i == this.usuarios_migrados.length){
+        return clearInterval(timerId);
+      }
+    }, 200);
+  }
+  /* ======ENVÍA POR MÉTODO FETCH EL USUARIO DEL INTERVALO==== */
+  function loadUser(info){
+    let user = {
+      identificacion: info[0],
+      nombre: info[1],
+      correo: info[2],
+      telefono: info[3],
+      ficha: info[4],
+      cargo: info[5],
+      rol: info[6],
+      sede: info[7]
+    }
+    var datos= new URLSearchParams();
+    datos.append('identificacion', info[0]);
+    datos.append('new_iden', info[0]);
+    datos.append('nombre', info[1]);
+    datos.append('correo', info[2]);
+    datos.append('telefono', info[3]);
+    datos.append('ficha',  info[4]);
+    datos.append('cargo',  info[5]);
+    datos.append('rol',  info[6]);
+    datos.append('sede',  info[7]);
+    fetch("/registro",{
+      method:'post',
+      body : datos,
+      headers: {'Authorization': 'Bearer '+ token}
+    }).then(res=>res.json())
+    .then(data=>{
+      /* ================================= */
+      if(data.status == 200) this.success_jobs.push(user);
+      else {
+        console.log(data);
+        this.failed_jobs.push(user)
+      };
+      /* ====DIV DE INFORMACIÓN==== */
+      let infoDiv = document.getElementById('info-div');
+      let cargados = success_jobs.length + failed_jobs.length;
+      document.getElementById('load-user').innerHTML = cargados;
+      if(cargados == this.usuarios_migrados.length) {
+        let load_success = ``;
+        let load_errors = ``;
+        if(success_jobs.length > 0) {
+          load_success = `
+          <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+              <p class="card-text">¡Se registraron ${success_jobs.length} exitosamente!</p>
+            </div>
+          </div>`;
+        }
+        if(failed_jobs.length > 0) {
+          load_errors = `
+          <div class="card mb-3">
+            <div class="card-header text-white bg-danger">¡Surdieron ${failed_jobs.length} errores en la carga de usuarios!</div>
+            <div class="card-body">
+              <table class="table table-striped" id="table-error">
+                <thead>
+                  <tr>
+                    <th>Identificación</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Ficha</th>
+                    <th>Rol</th>
+                    <th>Cargo</th>
+                    <th>Sede</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          `;
+        }
+        infoDiv.innerHTML = load_success + load_errors;
+        $('#table-error').DataTable({
+          "paging":true,
+          "autoWidth": false,
+          "processing":true,
+          "responsive":true,
+          "destroy":true,
+          "data": failed_jobs,
+          dom: 'Bfrtip',
+          buttons:[ 'excel'],
+          columns:[
+                {"data": "identificacion"},
+                {"data": "nombre"},
+                {"data": "correo"},
+                {"data": "telefono"},
+                {"data": "ficha"},
+                {"data": "rol"},
+                {"data": "cargo"},
+                {"data": "sede"},
+            ]
+        });
+        document.getElementById('footer-regiter-modal').setAttribute('style', 'display:none');
+        document.getElementById('excelInnpt').value = '';
+        listar_Usuarios();
+      }
+    }).catch(err => console.log(err));
+  }
+  
+  /* ===========selector para el ID FICHA=============== */
+  document.getElementById('cargo').addEventListener('change', (e)=> {
+    var cargo = document.getElementById('cargo').value;
+    var div = document.getElementById('Div_ID');
+    
+    if( cargo == 1) div.style.display = 'block';
+    else div.style.display = 'none';
+    
+  })
+  document.getElementById('cargoR').addEventListener('change', (e)=> {
+    var cargo = document.getElementById('cargoR').value;
+    var div = document.getElementById('Div_idR');
+
+    if( cargo == 1) div.style.display = 'block';
+    else div.style.display = 'none';
+    
+  })
+</script>

@@ -1,0 +1,287 @@
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <link rel="stylesheet" href="css/tabla.listas.css">
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+    </div>
+    <div class="main-contenedor">
+        <div class="body-info-section">
+            <div class="full-container">
+                <div class="breadcrumb">
+                    <a href="/admin" class="go-home">Volver al inicio</a>  | <a href="#">Dar de Baja</a>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <h1 class="h-title">Dar de baja a los productos</h1>
+                    </div>
+                </div>
+                    <div class="table-admin mt-1">
+                        <table id="tabla-inventario" class="table mt-3" style="width:100%;">
+                            <thead>
+                                <tr class="line-head">
+                                    <th>ID Inventario</th>
+                                    <th>Punto de Venta</th>
+                                    <th>ID P.V</th>
+                                    <th>Producto</th>
+                                    <th>Stock</th>
+                                    <th>Admin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <!-- MODAL -->
+    <div class="modal fade" id="modal-dar-baja" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-s">
+            <div class="modal-content col-4">
+                <div class="modal-header">
+                    <div><b>Dar baja: </b> <span id="pdto-baja"></span></div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8 mb-2">
+                            <input type="text" id="nombre_producto" class="form-control" disabled>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="number" id="cantidad_pdto" value="0" class="form-control" placeholder="Cantidad..." >
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="descripcion" style="height: 100px;"></textarea>
+                                <label for="descripcion">Descripción</label>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="ConfirmarBaja()">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- AUTOCONSUMO -->
+    <div class="modal fade" id="modal-consumo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-s">
+            <div class="modal-content col-4">
+                <div class="modal-header">
+                    <div><b>Autoconsumo: </b> <span id="pdto-consumo"></span></div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8 mb-2">
+                            <input type="text" id="nombre-pdto-consumo" class="form-control" disabled>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="number" value="0" class="form-control" placeholder="Cantidad..." id="cantidad-pdto-consumo">
+                        </div>
+                        <div class="col-md-12">
+                            <label for="lider-up-consumo">Lider U.P</label>
+                            <div class="row">
+                                <div class="col-8">
+                                    <input type="number" id="lider-up-consumo" placeholder="Digite el documento del lider" class="form-control">
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-secondary w-100" onclick="BuscarPersona()">Buscar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mt-2" id="div-nombre-persona" style="display: none;">
+                            <input type="text" value="Alejandro Cubillos Contreras" id="nombre-persona" class="form-control" disabled>
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="descripcion_consumo" style="height: 100px;"></textarea>
+                                <label for="descripcion_consumo">Descripción del consumo</label>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" id="footer-consumo" style="display: none;">
+                    <button class="btn btn-primary" onclick="ConfirmarConsumo()">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('../partials/footer') %>
+    <%- include('../partials/scripts.ejs') %> 
+</body>
+<script>
+    Listar_Productos_Stock();
+    
+    var modal = {
+        id_inventario: '',
+        id_movimiento: '',
+        id_punto_venta: '',
+        persona: ''
+    };
+    
+    var bajaModal = new bootstrap.Modal(document.getElementById('modal-dar-baja'), {keyboard: false});
+    var consumoModal = new bootstrap.Modal(document.getElementById('modal-consumo'), {keyboard: false});
+
+    function DarBajaModal(id_inventario, producto, id_punto_venta, punto_venta){
+        this.modal.id_inventario = id_inventario;
+        this.modal.id_punto_venta = id_punto_venta;
+        document.getElementById('cantidad_pdto').value = 0;
+        document.getElementById('descripcion').value = '';
+        document.getElementById('pdto-baja').innerHTML = `${producto} - ${punto_venta}`;
+        document.getElementById('nombre_producto').value = producto;
+        GenerarMovimiento('DarBaja')
+        bajaModal.show();
+    }
+    function ConsumoModal(id_inventario, producto, id_punto_venta, punto_venta){
+        this.modal.id_inventario = id_inventario;
+        this.modal.id_punto_venta = id_punto_venta;
+        document.getElementById('lider-up-consumo').value = '';
+        document.getElementById('div-nombre-persona').style.display = 'none';
+        document.getElementById('cantidad-pdto-consumo').value = 0;
+        document.getElementById('descripcion_consumo').value = '';
+        document.getElementById('pdto-consumo').innerHTML = `${producto} - ${punto_venta}`;
+        document.getElementById('nombre-pdto-consumo').value = producto;
+
+        consumoModal.show();
+    }
+
+    function BuscarPersona(){
+        var datos = new URLSearchParams;
+        let persona =  document.getElementById('lider-up-consumo').value;
+        if(!persona.trim()) return launchAlert({icon: 'warning', message: 'Digita una identificación váida'});
+        datos.append('identificacion', persona);
+        fetch('buscar', {
+            method: "POST",
+            body: datos,
+            headers: {'Authorization': 'Bearer '+ token}
+        }).then(res => res.json())
+        .then(data => {
+            if(data.length <= 0) {
+                document.getElementById('div-nombre-persona').style.display = 'none';
+                document.getElementById('footer-consumo').style.display = 'none';
+                return launchAlert({icon: 'error', message: 'Persona no encontrada'});
+            }
+            document.getElementById('div-nombre-persona').style.display = 'block';
+            document.getElementById('footer-consumo').style.display = 'flex';
+            document.getElementById('nombre-persona').value = data.Nombres;
+            this.modal.persona = data.identificacion;
+            GenerarMovimiento('Autoconsumo');
+        });
+    }
+
+    async function ConfirmarConsumo(){
+        let cantidad = document.getElementById('cantidad-pdto-consumo').value;
+        let descripcion = document.getElementById('descripcion_consumo').value;
+        if(cantidad <= 0) return launchAlert({icon: 'warning', message: 'Digita una cantidad válida'});
+        if(!descripcion.trim()) return launchAlert({icon: 'warning', message: 'Digita una descripcion válida'});
+
+        var datos = new URLSearchParams;
+        datos.append('operacion', 'Autoconsumo');
+        datos.append('cantidad', cantidad);
+        datos.append('descripcion', descripcion);
+        datos.append('identifiacion', this.modal.persona);
+        datos.append('movimiento', this.modal.id_movimiento);
+        datos.append('inventario', this.modal.id_inventario);
+        await fetch('detalle-especial', {
+            method: "POST",
+            body: datos,
+            headers: {'Authorization': 'Bearer '+ token}
+        }).then(res => res.json())
+        .then(data => {
+            launchAlert({icon: 'success', message: 'Autoconsumo exitoso'});
+            Listar_Productos_Stock();
+            consumoModal.hide();
+        });
+    }
+    async function ConfirmarBaja(){
+        let cantidad = document.getElementById('cantidad_pdto').value;
+        let descripcion = document.getElementById('descripcion').value;
+        if(cantidad <= 0) return launchAlert({icon: 'warning', message: 'Digita una cantidad válida'});
+        if(!descripcion.trim()) return launchAlert({icon: 'warning', message: 'Digita una descripcion válida'});
+
+        var datos = new URLSearchParams;
+        datos.append('operacion', 'DarBaja');
+        datos.append('cantidad', cantidad);
+        datos.append('descripcion', descripcion);
+        datos.append('identifiacion', this.modal.persona);
+        datos.append('movimiento', this.modal.id_movimiento);
+        datos.append('inventario', this.modal.id_inventario);
+        await fetch('detalle-especial', {
+            method: "POST",
+            body: datos,
+            headers: {'Authorization': 'Bearer '+ token}
+        }).then(res => res.json())
+        .then(data => {
+            launchAlert({icon: 'success', message: 'Productos dados de baja exitosaente'});
+            Listar_Productos_Stock();
+            bajaModal.hide();
+        });
+    }
+
+    function GenerarMovimiento(accion){
+        var datos = new URLSearchParams;
+        datos.append('accion', accion);
+        datos.append('id_punto_venta', this.modal.id_punto_venta);
+        if(accion == 'Autoconsumo') {
+            datos.append('persona', this.modal.persona);
+        }
+        fetch('movimiento-especial', {
+            method: "POST",
+            body: datos,
+            headers: {'Authorization': 'Bearer '+ token}
+        }).then(res => res.json())
+        .then(data => {
+            if(accion == 'DarBaja') this.modal.persona = data.persona;
+            this.modal.id_movimiento = data.id_movimiento;
+        });
+    }
+    function Listar_Productos_Stock(){
+        fetch("Listar_Productos_Stock",{
+            method: "GET",
+            headers: {'Authorization': 'Bearer '+ token}
+        })
+        .then(res => res.json())
+        .then(data => {
+            let json = [];
+            let array ={};
+            data.forEach(element => {
+                array = {
+                    "id_inventario": element.id_inventario,
+                    "producto": element.producto+' | '+ element.descripcion,
+                    "id_punto_venta": element.id_punto_venta,
+                    "punto_venta": element.punto_venta,
+                    "stock": element.stock,
+                    "accion": `<button onclick="DarBajaModal('${element.id_inventario}', '${element.producto}', '${element.id_punto_venta}', '${element.punto_venta}')" class="btn btn-primary">Dar baja</button> 
+                    <button onclick="ConsumoModal('${element.id_inventario}', '${element.producto}', '${element.id_punto_venta}', '${element.punto_venta}')" class="btn btn-secondary">Autoconsumo</button>
+                    `,
+                }
+                json.push(array);
+            });
+            $('#tabla-inventario').DataTable({
+                "paging":true,
+                "processing":true,
+                "responsive":true,
+                "destroy":true,
+                "data":json,
+                dom: 'Bfrtip',
+                columns:[
+                    {"data": "id_inventario"},
+                    {"data": "producto"},
+                    {"data": "id_punto_venta"},
+                    {"data": "punto_venta"},
+                    {"data": "stock"},
+                    {"data": "accion"},
+                ]
+            })  
+        })
+        .catch(err => console.log(err.response))
+    }
+</script>
+</html>

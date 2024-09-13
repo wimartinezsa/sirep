@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head'); %>
+    <link rel="stylesheet" href="css/produccionUp.css">
+    <style>
+        .table-center td{text-align: center;}
+    </style>
+    <title>SENA</title>
+</head>
+
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin'); %>
+    </div>
+    <div class="main-contenedor">
+        <div class="body-info-section">
+            <div class="contenedor-general">
+                <div class="breadcrumb">
+                    <a href="/admin" class="go-home">Volver al inicio</a>  | <a href="#">Produccion</a>
+                </div>
+                <div class="row">
+                    <div class="col-md-6"><h1 class="h-title">Administrar Producción</h1></div>
+                    <div class="col-md-6" style="text-align: end;"> 
+                        
+                        <button class="btn btn-primary" id="Openform" class="btn-edit2"
+                        data-bs-toggle="modal" onclick="abrir_Frm_Produccion()">
+                            <span class="icon-library_add"></span> Nueva Producción
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="ListaProdu">
+                        <table class="table table-center table-striped" id="tablaProducccion">
+                            <thead>
+                                <th></th>
+                                <th>U.P</th>
+                                <th>Fecha</th>
+                                <th>Producto</th>
+                                <th>Und. Medida</th>
+                                <th>Producido</th>
+                                <th>Observación</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </thead>
+                            <tbody id="tabla">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =============MODAL DE REGISTRO================= -->
+        <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-s">
+                <div class="modal-content col-4">
+                    <div class="modal-header">
+                        <div class="reserva">
+                            <label class="encabezado">Registro de producción</label>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="main">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4 id="nameup" class="encabezado"></h4>
+                                </div>
+                            </div>
+                            <div class="content-main">
+                                <form id="form-produccion">
+                                    <!--------SELECCIONA PRODUCTO------>
+                                    <input type="number" id="id-produccion" readonly="true" hidden="true">
+
+
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="col-md-12">
+                                                <select id="pdto" class="form-select">
+                                                    <option value="" selected disabled>Selecciona un producto</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input class="form-control" type="number" 
+                                            id="cantidad" placeholder="Cantidad" min="1" max="50">
+                                        </div>
+                                    </div>
+                                    <div class="describe">
+                                        Fecha de la Producción <input type="date" class="form-control" id="fecha">
+                                        
+                                    </div>
+                                    <div class="describe">
+                                        Nuevas Observaciones<textarea style="width: 100%;" class="textDescribe" name="" id="observacion"
+                                            cols="30" rows="10"></textarea>
+                                    </div>
+                                    <div class="row"><input class="btn btn-success" type="button" id="btnRegistrar" value="Registar"
+                                        onclick="RegistrarProduccion();"></div>
+                                    <div class="row" ><input class="btn btn-primary" id="btnActualizar" type="button" value="Actualizar"
+                                            onclick="editarProduccion();"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        
+    </div>
+    </div>
+    <%- include('../partials/footer'); %>
+    <%- include('../partials/scripts'); %>
+    <script src="js/produccionUp.js"></script>
+</body>
+    <script>
+    
+       
+    </script>
+</html>

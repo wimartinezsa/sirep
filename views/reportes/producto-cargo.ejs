@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <link rel="stylesheet" href="css/tabla.listas.css">
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+    </div>
+    <div class="main-contenedor">
+        <div class="body-info-section">
+            <div class="full-container">
+                <div class="breadcrumb">
+                   
+                </div>
+                <div class="table-admin mt-1">
+                    <h1 class="h-title">Ventas de producto por cargo</h1>
+                    <form id="form-comparar-tiempo">
+                        <div class="row">
+                            <div class="form-group col-4">
+                                <label for="formGroupExampleInput">Producto</label>
+                                <select id="producto" class="form-select">
+                                    <%  pdtos.forEach(pdto=>{%>
+                                        <option value="<%=pdto.Codigo_pdto%>"><%=pdto.producto%></option>
+                                    <% })  %>
+                                </select>
+                            </div>
+                            <div class="form-group col-3">
+                                <label for="formGroupExampleInput">Fecha Inicio</label>
+                                <input type="date" class="form-control" id="date-start">
+                            </div>
+                            <div class="form-group col-3">
+                                <label for="formGroupExampleInput">Fecha Fin</label>
+                                <input type="date" class="form-control" id="date-end">
+                            </div>
+                            <div class="form-group col-2">
+                                <button class="btn btn-primary mt-4" type="button" onclick="Buscar_Reporte_Pdto_Cargo();">Buscar</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="table-admin mt-1">
+                        <table id="reporte_pvent"  class="table-info">
+                            <thead>                       
+                                <th>Cargo</th>
+                                <th>N° Ventas</th>
+                                <th>Total</th>
+                            </thead>
+                            <tbody></tbody>
+                      </table>                    
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <%- include('../partials/footer') %>
+    <%- include('../partials/scripts.ejs') %> 
+    <%- include('../partials/report-scripts.ejs') %> 
+
+</body>
+</html>
+<script src="js/catch.reporte.js"></script>
+<script>
+    function Buscar_Reporte_Pdto_Cargo(){
+        let fechafinal = fechafin.value;
+        let fecha = fechainicio.value;
+        let producto = document.getElementById('producto').value;
+        /* ========================================================== */
+        let datosbusqueda = new URLSearchParams;
+        datosbusqueda.append("producto", producto)
+        datosbusqueda.append("fechastart",fecha);
+        datosbusqueda.append("fechaend",fechafinal);
+        fetch('/producto-cargo',{
+            method:'post',
+            body:datosbusqueda,
+            headers: {'Authorization': 'Bearer '+ token,}
+        }).then(res=>res.json())
+        .then(data=>{
+            $('#reporte_pvent').DataTable({
+                "autoWidth": false,
+                "paging":true,
+                "processing":true,
+                "responsive":true,
+                "destroy":true,
+                "data":data,
+                dom: 'Bfrtip',
+                columns:[
+                    {"data": "cargo"},
+                    {"data": "count"},
+                    {"data": "total"},
+                ]
+            })
+        });
+    }
+</script>

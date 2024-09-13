@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <style>
+        .profle-input{
+            border: none;
+            background: none;
+            font-family: 'Meera Inimai';
+        }
+    </style>
+    <title>SENA</title>
+</head>
+<body>
+    <div class="content-header">
+        <%- include('../partials/header-admin') %> 
+    </div>
+    <div class="main-contenedor">
+        <section class="body-info-section">
+            <div class="contnet-section-info" style="min-height: 50vh;">
+                <div class="full-container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h1 class="h-title">Perfíl de Usuario</h1>
+                        </div>
+                    </div>
+                    <hr class="separador-text">
+                    <button class="btn btn-primary mb-3" 
+                    style="width: 100%;"
+                    onclick="Abrir_modal()">Cambiar Contraseña</button>
+                    <div class="border-box pd-none">
+                        <div class="title-info-row">
+                            <h2>Información Personal</h2>
+                        </div>
+                        <div class="row" style="--bs-gutter-x: 0;">
+                            <div class="col-sm-2" style=" padding: 0 10px;">
+                                <img src="/img/perfil/<%=profile.Foto %>" 
+                                style="display: block; width: 100%; max-width: 140px; margin: 0 auto;">
+                                <input type="file" accept=".png, .jpg, .jpeg, .svg" id="foto-input" style="display: none;"
+                                onchange="cambiarFoto()">
+                                <div style="width: 100%; max-width: 180px; margin: 0 auto;">
+                                    <div class="btn-group mt-2 mb-2" style="width: 100%;">
+                                        <label for="foto-input" class="btn btn-secondary" >Cambiar Foto</label>
+                                        <button class="btn btn-danger"
+                                        onclick="eliminarFoto()"><i class=" icon-trash1"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="row row-info-box-border">
+                                    <div class="col-sm-4">
+                                        <div class="row-info-box cursor-none">
+                                            <div class="first-column">IDENTIFICACION</div>
+                                            <div class="last-column"><%=profile.identificacion %> </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="row-info-box">
+                                            <div class="first-column"><label for="nombre">NOMBRE</label></div>
+                                            <div class="last-column">
+                                                <input type="text" id="nombre" style="width: 100%;" class="profle-input" value="<%=profile.Nombres%>">
+                                            </div>
+                                        </div>
+                                    </div>      
+                                    <div class="col-sm-4">
+                                        <div class="row-info-box">
+                                            <div class="first-column"><label for="correo">CORREO</label></div>
+                                            <div class="last-column">
+                                                <input type="text" id="correo" class="profle-input" value="<%=profile.Correo%>">
+                                            </div>
+                                        </div>
+                                    </div>                   
+                                </div>
+                                <div class="row" style="--bs-gutter-x: 0;">
+                                    <div class="col-sm-4">
+                                        <div class="row-info-box">
+                                            <div class="first-column"><label for="direccion">DIRECCIÓN</label></div>
+                                            <div class="last-column">
+                                                <input type="text" id="direccion" class="profle-input" value="<%=profile.Direccion%>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="row-info-box">
+                                            <div class="first-column"><label for="telefono">TELÉFONO</label></div>
+                                            <div class="last-column">
+                                                <input type="text" id="telefono" class="profle-input" value="<%=profile.Telefono%>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2"></div>
+                                    <div class="col-sm-2" style="padding: 10px; display: flex; align-items: flex-end;">
+                                        <button class="btn btn-primary" style="width: 100%;"
+                                        onclick="actualizarDatos('Perfil actualizado')">Guardar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-box pd-none mt-2">
+                        <div class="title-info-row">
+                            <h2>Información del Sistema</h2>
+                        </div>
+                        <div class="row-info-box row-info-box-border" style="display: flex;">
+                            <div class="first-column">ROL</div>
+                            <div class="last-column"><%=profile.Rol  %></div>
+                        </div>
+                        <div class="row-info-box" style="display: flex;">
+                            <div class="first-column">CARGO</div>
+                            <div class="last-column"><%=profile.Cargo  %> </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- MODAL PERFIL -->
+    <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cambiar Contraseña</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Contraseña Actual</label>
+                    <input class="form-control" type="text" id="actual_password">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nueva Contraseña</label>
+                    <input class="form-control" type="password" id="new_password">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Confirmar Nueva Contraseña</label>
+                    <input class="form-control" type="password" id="confirm_new_password">
+                </div>
+                <div class="mt-1" id="error_msg">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-primary" type="button" value="Actualizar" onclick="actualizarUsuario()">
+            </div>
+            </div>
+        </div>
+    </div>
+    <%- include('../partials/footer'); %>
+    <%- include('../partials/scripts.ejs') %> 
+    <script>
+        let nombre = document.getElementById('nombre')
+        let correo = document.getElementById('correo')
+        let direccion = document.getElementById('direccion')
+        let telefono = document.getElementById('telefono')
+        let foto = document.getElementById('foto-input')
+        var myModal = new bootstrap.Modal(document.getElementById('Modal'), {keyboard: false});
+        function Abrir_modal(){clearFields(); myModal.show()}
+        function Cerrar_modal(){myModal.hide()}
+        function cambiarFoto(){
+            if(!foto.files[0]) return;
+            let img = document.createElement('img');
+            actualizarDatos('Foto actualizada exitosamente', true);
+        }
+        function eliminarFoto(){
+            fetch('/auth/delete-profile-photo/<%=profile.identificacion %>', {
+                method: 'POST',
+                headers: {'Authorization': 'Bearer '+token},
+            })
+            .then(data => {return data.json()})
+            .then(res => {
+                console.log(res)
+                if(res.status == 'success'){
+                    return location.reload();
+                }
+            }).catch(e => console.log(e))
+        }
+        function actualizarDatos(message, reload){
+            if(nombre.value.length < 3) return launchModal('error', 'Validar el nombre');
+            if(correo.value.length < 3) return launchModal('error', 'Validar el correo');
+            var datos = new FormData();
+            datos.append('nombre', nombre.value);
+            datos.append('correo', correo.value);
+            datos.append('direccion', direccion.value);
+            datos.append('telefono', telefono.value);
+            datos.append('img', foto.files[0]);
+            fetch('/auth/change-profile/<%=profile.identificacion %>', {
+                method: 'POST',
+                headers: {'Authorization': 'Bearer '+token},
+                body: datos
+            })
+            .then(data => {return data.json()})
+            .then(res => {
+                if(res.status == 'success'){
+                    if(reload) return location.reload();
+                    launchModal('success', message)
+                }
+            }).catch(e => console.log(e))
+        }
+        function actualizarUsuario(){
+            let actual_password = document.getElementById('actual_password').value;
+            let new_password = document.getElementById('new_password').value;
+            let confirm_new_password = document.getElementById('confirm_new_password').value;
+            if(!actual_password) return document.getElementById('actual_password').focus();
+            if(!new_password) return document.getElementById('new_password').focus();
+            if(!confirm_new_password) return document.getElementById('confirm_new_password').focus();
+
+            if(new_password != confirm_new_password) {
+                return document.getElementById('error_msg').innerHTML = 
+                "<span class='danger-span'>Los datos ingresados en 'Nueva contraseña' y 'Confirmar Nueva Contraseña' no coinciden</span>";
+            }
+            var datos= new URLSearchParams();
+            datos.append('actual_password',actual_password);
+            datos.append('new_password',new_password);
+
+            fetch('/auth/change-password', {
+                method: 'POST',
+                headers: {'Authorization': 'Bearer '+token},
+                body: datos
+            })
+            .then(data => {return data.json()})
+            .then(res => {
+                if(res.status == 'success') {
+                    launchModal('success', 'Contraseña editada exitsamente')
+                    Cerrar_modal()
+                    return;
+                }
+                return document.getElementById('error_msg').innerHTML = 
+                "<span class='danger-span'>La 'Contraseña Actual' es incorrecta</span>";
+            })
+        }   
+        /* ====================LIMPIAR=========================== */
+        function clearFields(){
+            let actual_password = document.getElementById('actual_password').value = '';
+            let new_password = document.getElementById('new_password').value = '';
+            let confirm_new_password = document.getElementById('confirm_new_password').value = '';
+        }
+        /* ========================función para modal =================== */
+        function launchModal(icon, title){
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+            })
+            Toast.fire({
+                icon: icon,
+                title: title,
+                showConfirmButton: false,
+                timer: 2000
+            })
+        }
+    </script>
+</body>
+</html>

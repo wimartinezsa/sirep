@@ -1,0 +1,313 @@
+#modalRegistro, #modalPermisoAdmin, #modaleditar{
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.head-table {
+    margin: 1em 1.3em 1em 0;
+    display: grid;
+    grid-template: "nombre btnadd" 60px /1fr 100px;
+    align-items: flex-end;
+}
+
+.table {
+    width: 98.5%;
+    font-size: 0.9em;
+}
+
+.table thead {
+    background: rgb(94, 179, 25);
+    color: white;
+    height: 40px;
+    text-align: center;
+}
+
+.table tr td {
+    height: 20px;
+    background: lightgray;
+    text-align: center;
+}
+
+.input-s::placeholder {
+    color: rgb(192, 192, 192);
+}
+
+.btn-primary {
+    justify-self: end;
+}
+
+.box2 {
+    width: 90%;
+    display: grid;
+    grid-template: "titulo titulo" 40px "control control" 60px/1fr 1fr;
+}
+
+.box2 div:nth-child(1) {
+    grid-area: titulo;
+}
+
+label {
+    display: block;
+}
+
+.cont-form {
+    grid-area: control;
+    width: 90%;
+    display: grid;
+    grid-template: "inputid inputidcliente" 20px "nombre estado" /100px 100px;
+}
+
+.input1 {
+    width: 100px;
+}
+
+.link-facturar {
+    margin-left: 1em;
+}
+
+.link-facturar,
+.link-detalle {
+    border: none;
+    background: rgb(94, 179, 25);
+    border-radius: 5px;
+    width: 70px;
+    color: white;
+}
+
+.link-facturar:hover,
+.link-detalle:hover {
+    background: rgb(75, 142, 20);
+}
+
+.input-style {
+    border: 1px gray solid;
+}
+
+.modal-cart {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+.table-cart {
+    width: 60%;
+    overflow: auto;
+}
+
+.cont-cart {
+    width: 40%;
+    display: flex;
+    justify-content: end;
+    border-left: 1px lightgray solid;
+    margin-left: 10px;
+}
+
+.dt-table-cart {
+    font-size: 0.9em;
+}
+
+.dt-table-cart thead tr {
+    background: rgb(94, 179, 25);
+    color: white;
+}
+
+.modal-header {
+    color: white;
+    background: rgb(94, 179, 25);
+}
+
+.btnreg {
+    margin-left: 1em;
+}
+
+.btnadd {
+    background: rgb(255, 132, 0);
+}
+
+.btnadd:hover {
+    background: rgb(215, 111, 0);
+}
+
+.action-td {
+    width: 200px;
+}
+
+.modal-dark {
+    background: rgba(0, 0, 0, 0.661);
+}
+
+.conDet {
+    display: grid;
+    grid-template: "datosCliente" 100px "tabladetalle" auto /1fr;
+}
+
+#divDatosClente {
+    grid-area: datosCliente;
+}
+
+#cuerpo-tabla-detalle {
+    grid-area: tabladetalle;
+}
+
+.col-id,
+.row1 {
+    width: 10px;
+}
+
+#table-cart,
+#tableAddProd {
+    text-align: center;
+    width: 100%;
+}
+
+#tableAddProd tr {
+    height: 30px;
+}
+
+#tableAddProd tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#tableInfoProducto tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.input-Cant {
+    width: 50%;
+}
+
+#dt-table-cart {
+    text-align: center;
+}
+
+.add-lk {
+    color: white;
+    padding: 0.2em 0.5em 0.2em 0.5em;
+    text-decoration: none;
+    background: rgb(209, 102, 8);
+    border-radius: 5px;
+}
+
+.add-lk:hover {
+    color: white;
+    background: rgb(151, 73, 5);
+}
+
+.total-precio{
+    text-align: end;
+}
+
+.factBtn {
+    color: white;
+    text-decoration: none;
+    padding: 0.5em;
+    background: rgb(255, 123, 0);
+    border-radius: 5px;
+}
+
+.factBtn:hover {
+    color: white;
+    background: rgb(208, 101, 0);
+}
+
+.lbNombre {
+    font-size: 1.5em;
+}
+
+.lbPrecio {
+    font-size: 0.2em;
+}
+
+.lb-descuento{
+    font-size: 1.2em;
+    margin-top: 3em;
+}
+.lb-pregunta{
+    align-self: start;
+}
+
+@media (min-width: 576px) {
+    .modal-fullscreen-xxl-down {
+        max-width: 100%;
+    }
+}
+
+#sbutton {
+    margin-top: 2em;
+    height: 36px;
+    width: 100%;
+}
+
+#delBtn {
+    border: none;
+    font-size: .8rem;
+}
+
+#delBtn span {
+    line-height: 1.5em;
+    color: white;
+    font-size: 1rem;
+}
+
+#ver-precios {
+    cursor: pointer;
+}
+
+#tableInfoProducto {
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+}
+
+#tableInfoProducto tr,
+#tableInfoProducto td {
+    width: 500px;
+    height: 30px;
+}
+
+.agregarButton {
+    background-color: rgb(255, 136, 0);
+    padding: 5px;
+    border-radius: 5px;
+    margin: 10px;
+    text-decoration: none;
+    color: white;
+}
+
+.agregarButton:hover {
+    background-color: rgb(198, 109, 7);
+    color: white;
+}
+
+#modalNewVenta {
+    overflow: hidden;
+}
+
+#modalAddProd {
+    overflow: hidden;
+}
+
+input[type=search] {
+    border-color: gray;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.table-cart {
+    overflow: hidden;
+}
+
+#tableCart {
+    width: 100%;
+}
+
+#btn-deshabilitado {
+    background: gray;
+    transition: 0.5s;
+}
+#img-prod{
+    display: block;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+    border-radius: .3rem;
+}
