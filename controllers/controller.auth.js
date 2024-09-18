@@ -3,6 +3,7 @@ const authConfig = require('../config/auth')
 const jwt = require('jsonwebtoken');
 const multer = require('multer-js');
 const nodemailer = require("nodemailer");
+const bcrypt = require("bcrypt");
 
 const controllerAuth = {}
 // PERSONAS
@@ -44,7 +45,10 @@ controllerAuth.logIn = async(req, res) => {
         if(rows[0].Estado == 0) return res.json({status: 'errorIn', message: 'Usuario no se enccuentra activo'});
         if(rows.length <= 0) return res.json({status: 'error', message: 'User not found'});
         /* ====VALIDA LA CONTRASEÑA===== */
-        if(req.body.password == rows[0].Password) compare = true;
+
+        const validPassword = await bcrypt.compare(req.body.password,rows[0].Password);
+
+        if( validPassword ) compare = true;
         else compare = false;
 
         if(!compare) return res.json({status: 'error', message: 'User or password incorrect'});
@@ -156,15 +160,23 @@ controllerAuth.changePassword = async (req, res) => {
     let token = req.session.token;
     let decoded = jwt.verify(token, authConfig.secret);
     let actual_password = req.body.actual_password;
-    let new_password = req.body.new_password;
+   
+    let new_password = bcrypt.hashSync(req.body.new_password, 12);
+
+
     if(!new_password) return res.json({status: 'error', message: 'New password cannot be empty'})
     var sql =`select Password from personas WHERE identificacion = '${decoded.user.id}'`;
     try{
         let rows = await query(sql);
-        if(actual_password == rows[0].Password) compare = true;
+
+        const validPassword = await bcrypt.compare(actual_password,rows[0].Password);
+        if(validPassword) compare = true;
+       // if(actual_password == rows[0].Password) compare = true;
         else compare = false;
         if(!compare) return res.json({status: 'error', message: 'La contraseña actual no coincide'})
-        let pass_new = new_password;
+       
+        let pass_new = bcrypt.hashSync(actual_password, 12);
+
         var sql_update =`update personas set password = '${pass_new}' WHERE identificacion = '${decoded.user.id}'`;
         //=========UPDATE PASSWORD============== 
         await query(sql_update)
@@ -197,14 +209,17 @@ controllerAuth.recuperarContrasenia = async (req, res) => {
               pass: 'mxczzjaulmsjhzgt' // generated ethereal password
             },
         });
-    
+        let new_password = bcrypt.hashSync(`${persona[0].identificacion}`, 12);
+        //console.log(new_password);
+        var sql_update =`update personas set password = '${new_password}' WHERE identificacion = '${identificacion}'`;
+        await query(sql_update);
         await transporter.sendMail({
             from: '"SIREP" <sirep.sena@gmail.com>', // sender address
             to: persona[0].Correo, // list of receivers
             subject: "Recuperación de contraseña - SIREP", // Subject line
             html: `<p>Tus credenciales de acceso son:</p>
             <p>Usuario: <b>${persona[0].Login}</b></p>
-            <p>Contraseña: <b>${persona[0].password}</b></p>`, // html body
+            <p>Contraseña: <b>${identificacion}</b></p>`, // html body
         });
 
         console.log("Message sent: %s", persona[0].Correo);

@@ -1,4 +1,5 @@
-const query = require('../database/pool-conexion')
+const query = require('../database/pool-conexion');
+const bcrypt = require("bcrypt");
 const controlador = {};
 
 /** 
@@ -60,7 +61,7 @@ controlador.RegistroCliente = async (req,res)=>{
     let user = req.body.identificacion;
     let sede = req.body.sede;
     // PASSWORD ENCRYPT
-    let pas = ide;
+    let pas = bcrypt.hashSync(ide, 12);
     /*==================== inyeccion sql============ */
     var sql = `insert into personas(identificacion,Nombres,Correo,Login, Password,Direccion,Telefono,Ficha,Cargo,Rol,Estado, Sede)
      values(${ide},'${nomb}','${corre}','${user}','${pas}','${direccion}','${telefono}','${ficha}', '${cargo}','${rol}','${estado}', '${sede}')`;
@@ -100,8 +101,10 @@ controlador.actualizar = async (req,res)=>{
     let estado = req.body.estado;
     if(!ficha) ficha = 0;
     
+    let pas = bcrypt.hashSync(new_ide, 12);
+
     var sql = `update  personas set 
-        Password = '${new_ide}',
+        Password = '${pas}',
         Login = '${new_ide}',
         identificacion = ${new_ide},
         Nombres='${nomb}',
@@ -113,7 +116,7 @@ controlador.actualizar = async (req,res)=>{
         Rol='${rol}',
         Sede='${sede}',
         Estado='${estado}' 
-    where identificacion=${ide}`;
+        where identificacion=${ide}`;
    try{
         await query(sql);
         return res.json({status:200, msg: 'Usuario actualizado con éxito'});
