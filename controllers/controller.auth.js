@@ -42,6 +42,9 @@ controllerAuth.logIn = async(req, res) => {
         WHERE Login = '${req.body.user}'`;
         let rows =  await query(sql);
         /* ====FILAS DE LA CONSULTA */
+
+        //console.log(rows[0].Password );
+
         if(rows[0].Estado == 0) return res.json({status: 'errorIn', message: 'Usuario no se enccuentra activo'});
         if(rows.length <= 0) return res.json({status: 'error', message: 'User not found'});
         /* ====VALIDA LA CONTRASEÑA===== */
@@ -160,13 +163,13 @@ controllerAuth.changePassword = async (req, res) => {
     let token = req.session.token;
     let decoded = jwt.verify(token, authConfig.secret);
     let actual_password = req.body.actual_password;
-   
-    let new_password = bcrypt.hashSync(req.body.new_password, 12);
-
+    let new_password = req.body.new_password;
+  
 
     if(!new_password) return res.json({status: 'error', message: 'New password cannot be empty'})
     var sql =`select Password from personas WHERE identificacion = '${decoded.user.id}'`;
     try{
+       
         let rows = await query(sql);
 
         const validPassword = await bcrypt.compare(actual_password,rows[0].Password);
@@ -175,7 +178,7 @@ controllerAuth.changePassword = async (req, res) => {
         else compare = false;
         if(!compare) return res.json({status: 'error', message: 'La contraseña actual no coincide'})
        
-        let pass_new = bcrypt.hashSync(actual_password, 12);
+        let pass_new = bcrypt.hashSync(new_password, 12);
 
         var sql_update =`update personas set password = '${pass_new}' WHERE identificacion = '${decoded.user.id}'`;
         //=========UPDATE PASSWORD============== 
